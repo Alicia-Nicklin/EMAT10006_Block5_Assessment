@@ -14,6 +14,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
+import argparse
+
 class Node:
 
     def __init__(self, value, number, connections=None):
@@ -259,7 +261,7 @@ This section contains code for the Defuant Model - task 2 in the assignment
 '''
 
 
-def defuant_main():
+def defuant_main(beta=0.2, threshold=0.2):
 
     # Your code for task 2 goes here
     assert (0)
@@ -277,10 +279,89 @@ This section contains code for the main function- you should write some code for
 
 
 def main():
-    assert (0)
+
+    # You should write some code for handling flags here
+
+    parser = argparse.ArgumentParser()
+
+    # Task 1 command line parameters
+    parser.add_argument("-ising_model", type=int, help="Ising model with default parameters")
+    parser.add_argument("-external", type=float, default=0.0,
+                        help="Ising external value. Defaults to 0")
+    parser.add_argument("-alpha", type=int, default=1,
+                        help="Ising temperature value. Defaults to 1")
+    parser.add_argument("-test_ising", type=int, help="Run Ising tests")
 
 
-# You should write some code for handling flags here
+    # Task 2 command line parameters
+    parser.add_argument("-defuant", type=int, help="Defuant model with default parameters")
+    parser.add_argument("-beta", type=float, default=0.2,
+                        help="Defuant beta value. Defaults to 0.2")
+    parser.add_argument("-threshold", type=float, default=0.2,
+                        help="Defuant threshold value. Defaults to 0.2")
+    parser.add_argument("-test_defuant", type=int, help="Run defuant tests")
+
+
+    # Task 3 command line parameters
+    parser.add_argument("-network", type=int, help="Create a random network, size of n")
+    parser.add_argument("-test_network", type=int, help="Run network tests")
+
+
+    # Task 4 command line parameters
+    parser.add_argument("-random_network", type=int, help="Create a random network, size of n")
+    parser.add_argument("-connection_probability", type=float, default=0.3,
+                        help="Connection probability. Defaults to 0.3")
+    parser.add_argument("-ring_network", type=int, help="Create a ring network with a range of 1 and a size of n")
+    parser.add_argument("-small_world", type=int, help="Create a small-worlds network with default parameters, size n")
+    parser.add_argument("-re_wire", type=float, default=0.2, help="Re-wire probability. Defaults to 0.2")
+
+    args = parser.parse_args()
+
+    # Task 1 calls
+    if args.test_ising:
+        test_ising()
+    if args.ising_model:
+        population = np.random.rand(10,10)
+        for i in range(10):
+           for j in range(10):
+               if population[i][j] <=0.5:
+                  population[i][j] = -1
+               else:
+                   population[i][j] = 1
+
+        ising_main(population, args.alpha, args.external)
+
+
+    # Task 2 calls
+    if args.defuant:
+        defuant_main(args.beta, args.threshold)
+    if args.test_defuant:
+        test_defuant()
+
+
+    # Task 3 calls
+    if args.network:
+        network = Network()
+        print("Mean degree: " + str(network.mean_degree()))
+        print("Average path length: " + str(network.average_path_length()))
+        print("Clustering co - efficient:" + str(network.clustering_co_efficient()))
+        network.plot()
+    if args.test_network:
+        test_networks()
+
+    # Task 4 calls
+    if args.random_network:
+        network = Network()
+        network.make_random_network(args.random_network, args.connection_probability)
+        network.plot()
+    if args.ring_network:
+        network = Network()
+        network.make_ring_network(args.ring_network)
+        network.plot()
+
+    # Task 5
+
+
 
 if __name__ == "__main__":
     main()
