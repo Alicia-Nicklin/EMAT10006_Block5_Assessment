@@ -176,6 +176,16 @@ def calculate_agreement(population, row, col, external=0.0):
     return np.random * population
 
 
+def create_ising_population():
+    population = np.random.rand(10, 10)
+    for i in range(10):
+        for j in range(10):
+            if population[i][j] <= 0.5:
+                population[i][j] = -1
+            else:
+                population[i][j] = 1
+    return population
+
 def ising_step(population, external=0.0):
     '''
     This function will perform a single update of the Ising model
@@ -280,8 +290,6 @@ This section contains code for the main function- you should write some code for
 
 def main():
 
-    # You should write some code for handling flags here
-
     parser = argparse.ArgumentParser()
 
     # Task 1 command line parameters
@@ -321,15 +329,7 @@ def main():
     if args.test_ising:
         test_ising()
     if args.ising_model:
-        population = np.random.rand(10,10)
-        for i in range(10):
-           for j in range(10):
-               if population[i][j] <=0.5:
-                  population[i][j] = -1
-               else:
-                   population[i][j] = 1
-
-        ising_main(population, args.alpha, args.external)
+        ising_main(create_ising_population(), args.alpha, args.external)
 
 
     # Task 2 calls
@@ -357,6 +357,10 @@ def main():
     if args.ring_network:
         network = Network()
         network.make_ring_network(args.ring_network)
+        network.plot()
+    if args.small_world:
+        network = Network()
+        network.make_small_world_network(args.small_world, args.re_wire)
         network.plot()
 
     # Task 5
