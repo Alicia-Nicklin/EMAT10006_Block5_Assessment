@@ -106,7 +106,8 @@ class Network:
                     neighbour_y = network_radius * np.sin(neighbour_angle)
 
                     ax.plot((node_x, neighbour_x), (node_y, neighbour_y), color='black')
-
+        plt.autoscale()
+        plt.show()
 
 def test_networks():
     # Ring network
