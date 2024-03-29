@@ -96,7 +96,7 @@ class Network:
             if np.random.random() < re_wire_prob:
                 # Select a random node
                 while True:
-                    random_node=random.randint(0, N)
+                    random_node=random.randint(0, N-1)
                     if node.connections[index] == 0:
                         node.connections[random_node] = 1
                         self.nodes[random_node].connections[index] = 1
@@ -382,6 +382,7 @@ def main():
         network.plot()
     if args.test_network:
         test_networks()
+
 
     # Task 4 calls
     if args.random_network:
