@@ -69,7 +69,11 @@ class Network:
     def make_ring_network(self, N, neighbour_range=1):
 
         # Your code  for task 4 goes here
-        assert(0)
+        self.nodes = []
+        for node_number in range(N):
+            value = np.random.random()
+            connections = [0 for _ in range(N)]
+            self.nodes.append(Node(value, node_number, connections))
 
     def make_small_world_network(self, N, re_wire_prob=0.2):
 
