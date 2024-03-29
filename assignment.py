@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
 import argparse
+import random
 
 class Node:
 
@@ -85,7 +86,27 @@ class Network:
     def make_small_world_network(self, N, re_wire_prob=0.2):
 
         # Your code for task 4 goes here
-        assert(0)
+        neighbour_range = 2
+        self.nodes = []
+        for node_number in range(N):
+            value = np.random.random()
+            connections = [0 for _ in range(N)]
+            self.nodes.append(Node(value, node_number, connections))
+        for (index, node) in enumerate(self.nodes):
+            if np.random.random() < re_wire_prob:
+                # Select a random node
+                while True:
+                    random_node=random.randint(0, N)
+                    if node.connections[index] == 0:
+                        node.connections[random_node] = 1
+                        self.nodes[random_node].connections[index] = 1
+                        break
+            else:
+                for neighbour_index in range(index + 1, index + 1 + neighbour_range):
+                    if neighbour_index >= N:
+                        neighbour_index = neighbour_index - N
+                    node.connections[neighbour_index] = 1
+                    self.nodes[neighbour_index].connections[index] = 1
 
     def plot(self):
 
