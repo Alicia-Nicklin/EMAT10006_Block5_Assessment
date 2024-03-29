@@ -66,7 +66,7 @@ class Network:
                     node.connections[neighbour_index] = 1
                     self.nodes[neighbour_index].connections[index] = 1
 
-    def make_ring_network(self, N, neighbour_range=1):
+    def make_ring_network(self, N, neighbour_range=2):
 
         # Your code  for task 4 goes here
         self.nodes = []
@@ -74,6 +74,13 @@ class Network:
             value = np.random.random()
             connections = [0 for _ in range(N)]
             self.nodes.append(Node(value, node_number, connections))
+        for (index, node) in enumerate(self.nodes):
+                for neighbour_index in range(index + 1, index + 1 + neighbour_range):
+                    if neighbour_index >= N:
+                        neighbour_index = neighbour_index -N
+                    node.connections[neighbour_index] = 1
+                    self.nodes[neighbour_index].connections[index] = 1
+
 
     def make_small_world_network(self, N, re_wire_prob=0.2):
 
@@ -208,7 +215,7 @@ def ising_step(population, external=0.0):
         population[row, col] *= -1
 
 
-# Your code for task 1 goes here
+    # Your code for task 1 goes here
 
 def plot_ising(im, population):
     '''
@@ -325,6 +332,7 @@ def main():
     parser.add_argument("-connection_probability", type=float, default=0.3,
                         help="Connection probability. Defaults to 0.3")
     parser.add_argument("-ring_network", type=int, help="Create a ring network with a range of 1 and a size of n")
+    parser.add_argument("-range", type=int, default=2, help="Network range. Defaults to 2")
     parser.add_argument("-small_world", type=int, help="Create a small-worlds network with default parameters, size n")
     parser.add_argument("-re_wire", type=float, default=0.2, help="Re-wire probability. Defaults to 0.2")
 
@@ -361,7 +369,7 @@ def main():
         network.plot()
     if args.ring_network:
         network = Network()
-        network.make_ring_network(args.ring_network)
+        network.make_ring_network(args.ring_network, args.range)
         network.plot()
     if args.small_world:
         network = Network()
