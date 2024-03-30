@@ -119,12 +119,24 @@ class Network:
         ax.set_xlim([-1.1 * network_radius, 1.1 * network_radius])
         ax.set_ylim([-1.1 * network_radius, 1.1 * network_radius])
 
+        # Rather than just set "0.3 * num_nodes" as the radius of each small circle
+        # lets calculate it using basic trig
+
+        each_small_circle_radius = 0.3 * num_nodes
+        if (num_nodes>2):
+            each_arc_angle = 360 / num_nodes
+            step1 = network_radius * np.sin(np.deg2rad(each_arc_angle))
+            step2 = 180-each_arc_angle
+            step3 = step2/2
+            step4 = 2 * np.sin(np.deg2rad(step3))
+            each_small_circle_radius = (step1 / step4) - 2  # This -2 is just to put a tiny bit of space between
+
         for (i, node) in enumerate(self.nodes):
             node_angle = i * 2 * np.pi / num_nodes
             node_x = network_radius * np.cos(node_angle)
             node_y = network_radius * np.sin(node_angle)
 
-            circle = plt.Circle((node_x, node_y), 0.3 * num_nodes, color=cm.hot(node.value))
+            circle = plt.Circle((node_x, node_y), each_small_circle_radius, color=cm.hot(node.value))
             ax.add_patch(circle)
 
             for neighbour_index in range(i + 1, num_nodes):
