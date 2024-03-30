@@ -1,12 +1,13 @@
 ####################################################################
 #                                                                  #
+#              EMAT10006 Further Computer Programming  2024        #
 #                                                                  #
-#               EMAT10006 Further Computer Programming  2024       #
+#                      FCP Summative Assessment                    #
 #                                                                  #
-#                       FCP Summative Assessment                   #
-#                                                                  #
-#                                                                  #
-#                   Alicia Nicklin rp23953@bristol.ac.uk           #
+#                          Archie Miller                           #
+#                           Tommy Newman                           #
+#                          Alicia Nicklin                          #
+#                            Eric Ogden                            #
 #                                                                  #
 ####################################################################
 
@@ -15,6 +16,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
 import argparse
+import random
 
 class Node:
 
@@ -66,15 +68,46 @@ class Network:
                     node.connections[neighbour_index] = 1
                     self.nodes[neighbour_index].connections[index] = 1
 
-    def make_ring_network(self, N, neighbour_range=1):
+    def make_ring_network(self, N, neighbour_range=2):
 
         # Your code  for task 4 goes here
-        assert(0)
+        self.nodes = []
+        for node_number in range(N):
+            value = np.random.random()
+            connections = [0 for _ in range(N)]
+            self.nodes.append(Node(value, node_number, connections))
+        for (index, node) in enumerate(self.nodes):
+                for neighbour_index in range(index + 1, index + 1 + neighbour_range):
+                    if neighbour_index >= N:
+                        neighbour_index = neighbour_index -N
+                    node.connections[neighbour_index] = 1
+                    self.nodes[neighbour_index].connections[index] = 1
+
 
     def make_small_world_network(self, N, re_wire_prob=0.2):
 
         # Your code for task 4 goes here
-        assert(0)
+        neighbour_range = 2
+        self.nodes = []
+        for node_number in range(N):
+            value = np.random.random()
+            connections = [0 for _ in range(N)]
+            self.nodes.append(Node(value, node_number, connections))
+        for (index, node) in enumerate(self.nodes):
+            if np.random.random() < re_wire_prob:
+                # Select a random node
+                while True:
+                    random_node=random.randint(0, N-1)
+                    if node.connections[index] == 0:
+                        node.connections[random_node] = 1
+                        self.nodes[random_node].connections[index] = 1
+                        break
+            else:
+                for neighbour_index in range(index + 1, index + 1 + neighbour_range):
+                    if neighbour_index >= N:
+                        neighbour_index = neighbour_index - N
+                    node.connections[neighbour_index] = 1
+                    self.nodes[neighbour_index].connections[index] = 1
 
     def plot(self):
 
@@ -87,12 +120,24 @@ class Network:
         ax.set_xlim([-1.1 * network_radius, 1.1 * network_radius])
         ax.set_ylim([-1.1 * network_radius, 1.1 * network_radius])
 
+        # Rather than just set "0.3 * num_nodes" as the radius of each small circle
+        # lets calculate it using basic trig
+
+        each_small_circle_radius = 0.3 * num_nodes
+        if (num_nodes>2):
+            each_arc_angle = 360 / num_nodes
+            step1 = network_radius * np.sin(np.deg2rad(each_arc_angle))
+            step2 = 180-each_arc_angle
+            step3 = step2/2
+            step4 = 2 * np.sin(np.deg2rad(step3))
+            each_small_circle_radius = (step1 / step4) - 2  # This -2 is just to put a tiny bit of space between
+
         for (i, node) in enumerate(self.nodes):
             node_angle = i * 2 * np.pi / num_nodes
             node_x = network_radius * np.cos(node_angle)
             node_y = network_radius * np.sin(node_angle)
 
-            circle = plt.Circle((node_x, node_y), 0.3 * num_nodes, color=cm.hot(node.value))
+            circle = plt.Circle((node_x, node_y), each_small_circle_radius, color=cm.hot(node.value))
             ax.add_patch(circle)
 
             for neighbour_index in range(i + 1, num_nodes):
@@ -102,7 +147,8 @@ class Network:
                     neighbour_y = network_radius * np.sin(neighbour_angle)
 
                     ax.plot((node_x, neighbour_x), (node_y, neighbour_y), color='black')
-
+        plt.autoscale()
+        plt.show()
 
 def test_networks():
     # Ring network
@@ -203,7 +249,7 @@ def ising_step(population, external=0.0):
         population[row, col] *= -1
 
 
-# Your code for task 1 goes here
+    # Your code for task 1 goes here
 
 def plot_ising(im, population):
     '''
@@ -320,6 +366,7 @@ def main():
     parser.add_argument("-connection_probability", type=float, default=0.3,
                         help="Connection probability. Defaults to 0.3")
     parser.add_argument("-ring_network", type=int, help="Create a ring network with a range of 1 and a size of n")
+    parser.add_argument("-range", type=int, default=2, help="Network range. Defaults to 2")
     parser.add_argument("-small_world", type=int, help="Create a small-worlds network with default parameters, size n")
     parser.add_argument("-re_wire", type=float, default=0.2, help="Re-wire probability. Defaults to 0.2")
 
@@ -349,6 +396,7 @@ def main():
     if args.test_network:
         test_networks()
 
+
     # Task 4 calls
     if args.random_network:
         network = Network()
@@ -356,7 +404,7 @@ def main():
         network.plot()
     if args.ring_network:
         network = Network()
-        network.make_ring_network(args.ring_network)
+        network.make_ring_network(args.ring_network, args.range)
         network.plot()
     if args.small_world:
         network = Network()
