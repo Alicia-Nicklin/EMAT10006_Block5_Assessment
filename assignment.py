@@ -1,12 +1,13 @@
 ####################################################################
 #                                                                  #
+#              EMAT10006 Further Computer Programming  2024        #
 #                                                                  #
-#               EMAT10006 Further Computer Programming  2024       #
+#                      FCP Summative Assessment                    #
 #                                                                  #
-#                       FCP Summative Assessment                   #
-#                                                                  #
-#                                                                  #
-#                   Alicia Nicklin rp23953@bristol.ac.uk           #
+#                          Archie Miller                           #
+#                           Tommy Newman                           #
+#                          Alicia Nicklin                          #
+#                            Eric Ogden                            #
 #                                                                  #
 ####################################################################
 
