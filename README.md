@@ -1,5 +1,7 @@
 Guys - please work in your branch and create pull requests for me to merge code into the master branch. Thanks.
 
+Run this program in the Terminal. PyCharm doesn't display updating plots well.
+
 ```
 usage: assignment.py [-h] [-ising_model ISING_MODEL] [-external EXTERNAL] [-alpha ALPHA] [-test_ising TEST_ISING] [-defuant DEFUANT] [-beta BETA] [-threshold THRESHOLD] [-test_defuant TEST_DEFUANT] [-network NETWORK] [-test_network TEST_NETWORK]
                      [-random_network RANDOM_NETWORK] [-connection_probability CONNECTION_PROBABILITY] [-ring_network RING_NETWORK] [-range RANGE] [-small_world SMALL_WORLD] [-re_wire RE_WIRE]
