@@ -50,17 +50,22 @@ class Network:
         # Your code for task 3 goes here
         assert(0)
 
+
+    def make_default_network(self, N):
+        self.nodes = []
+        for node_number in range(N):
+            value = np.random.random()
+            connections = [0 for _ in range(N)]
+            self.nodes.append(Node(value, node_number, connections))
+
+
     def make_random_network(self, N, connection_probability):
         '''
         This function makes a *random* network of size N.
         Each node is connected to each other node with probability p
         '''
 
-        self.nodes = []
-        for node_number in range(N):
-            value = np.random.random()
-            connections = [0 for _ in range(N)]
-            self.nodes.append(Node(value, node_number, connections))
+        self.make_default_network(N)
 
         for (index, node) in enumerate(self.nodes):
             for neighbour_index in range(index + 1, N):
@@ -70,12 +75,10 @@ class Network:
 
     def make_ring_network(self, N, neighbour_range=2):
 
-        # Your code  for task 4 goes here
-        self.nodes = []
-        for node_number in range(N):
-            value = np.random.random()
-            connections = [0 for _ in range(N)]
-            self.nodes.append(Node(value, node_number, connections))
+        # Your code  for task 4 goes
+
+        self.make_default_network(N)
+
         for (index, node) in enumerate(self.nodes):
                 for neighbour_index in range(index + 1, index + 1 + neighbour_range):
                     if neighbour_index >= N:
@@ -89,10 +92,9 @@ class Network:
         # Your code for task 4 goes here
         neighbour_range = 2
         self.nodes = []
-        for node_number in range(N):
-            value = np.random.random()
-            connections = [0 for _ in range(N)]
-            self.nodes.append(Node(value, node_number, connections))
+
+        self.make_default_network(N)
+
         for (index, node) in enumerate(self.nodes):
             if np.random.random() < re_wire_prob:
                 # Select a random node
