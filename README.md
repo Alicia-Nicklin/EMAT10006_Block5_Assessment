@@ -1,5 +1,9 @@
 Guys - please work in your branch and create pull requests for me to merge code into the master branch. Thanks.
 
+Please clone your respective branch and commit/push to that, eg:
+
+  git clone https://github.com/Alicia-Nicklin/EMAT10006_Block5_Assessment --branch Networks-dev
+
 Run this program in the Terminal. PyCharm doesn't display updating plots well.
 
 ```
