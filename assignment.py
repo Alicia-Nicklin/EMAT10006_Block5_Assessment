@@ -17,6 +17,7 @@ import matplotlib.cm as cm
 
 import argparse
 import random
+import sys
 
 class Node:
 
@@ -373,6 +374,10 @@ def main():
     parser.add_argument("-re_wire", type=float, default=0.2, help="Re-wire probability. Defaults to 0.2")
 
     args = parser.parse_args()
+
+    if len(sys.argv) == 1:
+        parser.print_help(sys.stderr)
+        return
 
     # Task 1 calls
     if args.test_ising:
