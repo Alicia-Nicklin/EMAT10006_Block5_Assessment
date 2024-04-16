@@ -342,12 +342,12 @@ def main():
     parser = argparse.ArgumentParser()
 
     # Task 1 command line parameters
-    parser.add_argument("-ising_model", type=int, help="Ising model with default parameters")
+    parser.add_argument("-ising_model", action='store_true', help="Ising model with default parameters")
     parser.add_argument("-external", type=float, default=0.0,
                         help="Ising external value. Defaults to 0")
-    parser.add_argument("-alpha", type=int, default=1,
+    parser.add_argument("-alpha", type=float, default=1,
                         help="Ising temperature value. Defaults to 1")
-    parser.add_argument("-test_ising", type=int, help="Run Ising tests")
+    parser.add_argument("-test_ising", action='store_true', help="Run Ising tests")
 
 
     # Task 2 command line parameters
