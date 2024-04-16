@@ -4,6 +4,10 @@ Please clone your respective branch and commit/push to that, eg:
 
   git clone https://github.com/Alicia-Nicklin/EMAT10006_Block5_Assessment --branch Networks-dev
 
+In PyCharm, you can swap between branches by checking out:
+
+![image](https://github.com/Alicia-Nicklin/EMAT10006_Block5_Assessment/assets/154427982/5ba5c940-b7bc-4ee5-a654-0bb244621297)
+
 Run this program in the Terminal. PyCharm doesn't display updating plots well.
 
 ```
