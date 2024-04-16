@@ -1,6 +1,7 @@
 Guys - please work in your branch and let me know when you're done. I will then create pull requests for me to merge code into the master branch. Thanks.
 
-Please clone your respective branch and commit/push to that, eg:
+Please clone your respective branch and commit/push to that.
+If you are using the command line, external editor etc, use this command:
 
   git clone https://github.com/Alicia-Nicklin/EMAT10006_Block5_Assessment --branch Networks-dev
 
