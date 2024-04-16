@@ -1,4 +1,4 @@
-Guys - please work in your branch and create pull requests for me to merge code into the master branch. Thanks.
+Guys - please work in your branch and let me know when you're done. I will then create pull requests for me to merge code into the master branch. Thanks.
 
 Please clone your respective branch and commit/push to that, eg:
 
