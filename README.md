@@ -1,9 +1,13 @@
 Guys - please work in your branch and let me know when you're done. I will then create pull requests for me to merge code into the master branch. Thanks.
 
-The master branch is for final code.
+The master branch is for final (Task 5) code.
+
 Task 1 work should be done in the Ising_Dev branch
+
 Task 2 work should be done in the Defuant_Dev branch
+
 Task 3 work should be done in the Networks-dev branch
+
 Task 4 work should be done in the Small-Worlds-Network-Dev branch
 
 Task 5 - the final merge - we can work in the master branch.
