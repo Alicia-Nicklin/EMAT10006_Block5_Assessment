@@ -1,21 +1,5 @@
 Guys - please work in your branch and let me know when you're done. I will then create pull requests for me to merge code into the master branch. Thanks.
 
-The master branch is for final (Task 5) code.
-Task 1 work is the Ising_Dev branch
-Task 2 work is the Defuant_Dev branch
-Task 3 work is the Networks-dev branch
-Task 4 work is the Small-Worlds-Network-Dev branch
-Task 5 - in the master branch.
-
-Please clone in your branch and commit/push to that.
-If you are using the command line, external editor etc, use this command:
-
-  git clone https://github.com/Alicia-Nicklin/EMAT10006_Block5_Assessment --branch Networks-dev
-
-In PyCharm, you can swap between branches by checking out:
-
-![image](https://github.com/Alicia-Nicklin/EMAT10006_Block5_Assessment/assets/154427982/5ba5c940-b7bc-4ee5-a654-0bb244621297)
-
 Run this program in the Terminal. PyCharm doesn't display updating plots well.
 
 ```
