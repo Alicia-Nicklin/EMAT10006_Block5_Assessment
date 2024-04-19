@@ -1,18 +1,13 @@
 Guys - please work in your branch and let me know when you're done. I will then create pull requests for me to merge code into the master branch. Thanks.
 
 The master branch is for final (Task 5) code.
+Task 1 work is the Ising_Dev branch
+Task 2 work is the Defuant_Dev branch
+Task 3 work is the Networks-dev branch
+Task 4 work is the Small-Worlds-Network-Dev branch
+Task 5 - in the master branch.
 
-Task 1 work should be done in the Ising_Dev branch
-
-Task 2 work should be done in the Defuant_Dev branch
-
-Task 3 work should be done in the Networks-dev branch
-
-Task 4 work should be done in the Small-Worlds-Network-Dev branch
-
-Task 5 - the final merge - we can work in the master branch.
-
-Please clone your respective branch and commit/push to that.
+Please clone in your branch and commit/push to that.
 If you are using the command line, external editor etc, use this command:
 
   git clone https://github.com/Alicia-Nicklin/EMAT10006_Block5_Assessment --branch Networks-dev
