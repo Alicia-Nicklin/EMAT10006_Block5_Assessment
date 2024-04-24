@@ -1,12 +1,13 @@
 ####################################################################
 #                                                                  #
+#              EMAT10006 Further Computer Programming  2024        #
 #                                                                  #
-#               EMAT10006 Further Computer Programming  2024       #
+#                      FCP Summative Assessment                    #
 #                                                                  #
-#                       FCP Summative Assessment                   #
-#                                                                  #
-#                                                                  #
-#                   Alicia Nicklin rp23953@bristol.ac.uk           #
+#                          Archie Miller                           #
+#                           Tommy Newman                           #
+#                          Alicia Nicklin                          #
+#                            Eric Ogden                            #
 #                                                                  #
 ####################################################################
 
@@ -15,6 +16,8 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
 import argparse
+import random
+import sys
 
 class Node:
 
@@ -48,17 +51,22 @@ class Network:
         # Your code for task 3 goes here
         assert(0)
 
+
+    def make_default_network(self, N):
+        self.nodes = []
+        for node_number in range(N):
+            value = np.random.random()
+            connections = [0 for _ in range(N)]
+            self.nodes.append(Node(value, node_number, connections))
+
+
     def make_random_network(self, N, connection_probability):
         '''
         This function makes a *random* network of size N.
         Each node is connected to each other node with probability p
         '''
 
-        self.nodes = []
-        for node_number in range(N):
-            value = np.random.random()
-            connections = [0 for _ in range(N)]
-            self.nodes.append(Node(value, node_number, connections))
+        self.make_default_network(N)
 
         for (index, node) in enumerate(self.nodes):
             for neighbour_index in range(index + 1, N):
@@ -66,15 +74,43 @@ class Network:
                     node.connections[neighbour_index] = 1
                     self.nodes[neighbour_index].connections[index] = 1
 
-    def make_ring_network(self, N, neighbour_range=1):
+    def make_ring_network(self, N, neighbour_range=2):
 
-        # Your code  for task 4 goes here
-        assert(0)
+        # Your code  for task 4 goes
+
+        self.make_default_network(N)
+
+        for (index, node) in enumerate(self.nodes):
+                for neighbour_index in range(index + 1, index + 1 + neighbour_range):
+                    if neighbour_index >= N:
+                        neighbour_index = neighbour_index -N
+                    node.connections[neighbour_index] = 1
+                    self.nodes[neighbour_index].connections[index] = 1
+
 
     def make_small_world_network(self, N, re_wire_prob=0.2):
 
         # Your code for task 4 goes here
-        assert(0)
+        neighbour_range = 2
+        self.nodes = []
+
+        self.make_default_network(N)
+
+        for (index, node) in enumerate(self.nodes):
+            if np.random.random() < re_wire_prob:
+                # Select a random node
+                while True:
+                    random_node=random.randint(0, N-1)
+                    if node.connections[index] == 0:
+                        node.connections[random_node] = 1
+                        self.nodes[random_node].connections[index] = 1
+                        break
+            else:
+                for neighbour_index in range(index + 1, index + 1 + neighbour_range):
+                    if neighbour_index >= N:
+                        neighbour_index = neighbour_index - N
+                    node.connections[neighbour_index] = 1
+                    self.nodes[neighbour_index].connections[index] = 1
 
     def plot(self):
 
@@ -87,12 +123,24 @@ class Network:
         ax.set_xlim([-1.1 * network_radius, 1.1 * network_radius])
         ax.set_ylim([-1.1 * network_radius, 1.1 * network_radius])
 
+        # Rather than just set "0.3 * num_nodes" as the radius of each small circle
+        # lets calculate it using basic trig
+
+        each_small_circle_radius = 0.3 * num_nodes
+        if (num_nodes>2):
+            each_arc_angle = 360 / num_nodes
+            step1 = network_radius * np.sin(np.deg2rad(each_arc_angle))
+            step2 = 180-each_arc_angle
+            step3 = step2/2
+            step4 = 2 * np.sin(np.deg2rad(step3))
+            each_small_circle_radius = (step1 / step4) - 2  # This -2 is just to put a tiny bit of space between
+
         for (i, node) in enumerate(self.nodes):
             node_angle = i * 2 * np.pi / num_nodes
             node_x = network_radius * np.cos(node_angle)
             node_y = network_radius * np.sin(node_angle)
 
-            circle = plt.Circle((node_x, node_y), 0.3 * num_nodes, color=cm.hot(node.value))
+            circle = plt.Circle((node_x, node_y), each_small_circle_radius, color=cm.hot(node.value))
             ax.add_patch(circle)
 
             for neighbour_index in range(i + 1, num_nodes):
@@ -102,7 +150,8 @@ class Network:
                     neighbour_y = network_radius * np.sin(neighbour_angle)
 
                     ax.plot((node_x, neighbour_x), (node_y, neighbour_y), color='black')
-
+        plt.autoscale()
+        plt.show()
 
 def test_networks():
     # Ring network
@@ -161,7 +210,7 @@ This section contains code for the Ising Model - task 1 in the assignment
 
 def calculate_agreement(population, row, col, external=0.0):
     '''
-    This function should return the *change* in agreement that would result if the cell at (row, col) was to flip it's value
+    This function should return the extent to which a cell agrees with its neighbours.
     Inputs: population (numpy array)
             row (int)
             col (int)
@@ -180,10 +229,10 @@ def create_ising_population():
     population = np.random.rand(10, 10)
     for i in range(10):
         for j in range(10):
-            if population[i][j] <= 0.5:
-                population[i][j] = -1
+            if population[i, j] <= 0.5:
+                population[i, j] = -1
             else:
-                population[i][j] = 1
+                population[i, j] = 1
     return population
 
 def ising_step(population, external=0.0):
@@ -197,13 +246,13 @@ def ising_step(population, external=0.0):
     row = np.random.randint(0, n_rows)
     col = np.random.randint(0, n_cols)
 
-    agreement = calculate_agreement(population, row, col, external=0.0)
+    agreement = calculate_agreement(population, row, col, external)
 
     if agreement < 0:
         population[row, col] *= -1
 
 
-# Your code for task 1 goes here
+    # Your code for task 1 goes here
 
 def plot_ising(im, population):
     '''
@@ -243,8 +292,8 @@ def test_ising():
     population = -np.ones((3, 3))
     assert (calculate_agreement(population, 1, 1, 1) == 3), "Test 7"
     assert (calculate_agreement(population, 1, 1, -1) == 5), "Test 8"
-    assert (calculate_agreement(population, 1, 1, 10) == 14), "Test 9"
-    assert (calculate_agreement(population, 1, 1, -10) == -6), "Test 10"
+    assert (calculate_agreement(population, 1, 1, 10) == -6), "Test 9"
+    assert (calculate_agreement(population, 1, 1, -10) == 14), "Test 10"
 
     print("Tests passed")
 
@@ -293,12 +342,12 @@ def main():
     parser = argparse.ArgumentParser()
 
     # Task 1 command line parameters
-    parser.add_argument("-ising_model", type=int, help="Ising model with default parameters")
+    parser.add_argument("-ising_model", action='store_true', help="Ising model with default parameters")
     parser.add_argument("-external", type=float, default=0.0,
                         help="Ising external value. Defaults to 0")
-    parser.add_argument("-alpha", type=int, default=1,
+    parser.add_argument("-alpha", type=float, default=1,
                         help="Ising temperature value. Defaults to 1")
-    parser.add_argument("-test_ising", type=int, help="Run Ising tests")
+    parser.add_argument("-test_ising", action='store_true', help="Run Ising tests")
 
 
     # Task 2 command line parameters
@@ -312,7 +361,7 @@ def main():
 
     # Task 3 command line parameters
     parser.add_argument("-network", type=int, help="Create a random network, size of n")
-    parser.add_argument("-test_network", type=int, help="Run network tests")
+    parser.add_argument("-test_network", action='store_true', help="Run network tests")
 
 
     # Task 4 command line parameters
@@ -320,10 +369,15 @@ def main():
     parser.add_argument("-connection_probability", type=float, default=0.3,
                         help="Connection probability. Defaults to 0.3")
     parser.add_argument("-ring_network", type=int, help="Create a ring network with a range of 1 and a size of n")
+    parser.add_argument("-range", type=int, default=2, help="Network range. Defaults to 2")
     parser.add_argument("-small_world", type=int, help="Create a small-worlds network with default parameters, size n")
     parser.add_argument("-re_wire", type=float, default=0.2, help="Re-wire probability. Defaults to 0.2")
 
     args = parser.parse_args()
+
+    if len(sys.argv) == 1:
+        parser.print_help(sys.stderr)
+        return
 
     # Task 1 calls
     if args.test_ising:
@@ -342,12 +396,14 @@ def main():
     # Task 3 calls
     if args.network:
         network = Network()
-        print("Mean degree: " + str(network.mean_degree()))
-        print("Average path length: " + str(network.average_path_length()))
-        print("Clustering co - efficient:" + str(network.clustering_co_efficient()))
+        network.make_random_network(args.network, args.connection_probability)
+        print("Mean degree: " + str(network.get_mean_degree()))
+        # print("Average path length: " + str(network.get_mean_path_length()))
+        # print("Clustering co - efficient:" + str(network.get_mean_clustering()))
         network.plot()
     if args.test_network:
         test_networks()
+
 
     # Task 4 calls
     if args.random_network:
@@ -356,7 +412,7 @@ def main():
         network.plot()
     if args.ring_network:
         network = Network()
-        network.make_ring_network(args.ring_network)
+        network.make_ring_network(args.ring_network, args.range)
         network.plot()
     if args.small_world:
         network = Network()
