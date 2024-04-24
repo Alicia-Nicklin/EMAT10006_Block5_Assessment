@@ -210,7 +210,7 @@ This section contains code for the Ising Model - task 1 in the assignment
 
 def calculate_agreement(population, row, col, external=0.0):
     '''
-    This function should return the *change* in agreement that would result if the cell at (row, col) was to flip it's value
+    This function should return the extent to which a cell agrees with its neighbours.
     Inputs: population (numpy array)
             row (int)
             col (int)
@@ -229,10 +229,10 @@ def create_ising_population():
     population = np.random.rand(10, 10)
     for i in range(10):
         for j in range(10):
-            if population[i][j] <= 0.5:
-                population[i][j] = -1
+            if population[i, j] <= 0.5:
+                population[i, j] = -1
             else:
-                population[i][j] = 1
+                population[i, j] = 1
     return population
 
 def ising_step(population, external=0.0):
@@ -246,7 +246,7 @@ def ising_step(population, external=0.0):
     row = np.random.randint(0, n_rows)
     col = np.random.randint(0, n_cols)
 
-    agreement = calculate_agreement(population, row, col, external=0.0)
+    agreement = calculate_agreement(population, row, col, external)
 
     if agreement < 0:
         population[row, col] *= -1
@@ -292,8 +292,8 @@ def test_ising():
     population = -np.ones((3, 3))
     assert (calculate_agreement(population, 1, 1, 1) == 3), "Test 7"
     assert (calculate_agreement(population, 1, 1, -1) == 5), "Test 8"
-    assert (calculate_agreement(population, 1, 1, 10) == 14), "Test 9"
-    assert (calculate_agreement(population, 1, 1, -10) == -6), "Test 10"
+    assert (calculate_agreement(population, 1, 1, 10) == -6), "Test 9"
+    assert (calculate_agreement(population, 1, 1, -10) == 14), "Test 10"
 
     print("Tests passed")
 
@@ -361,7 +361,7 @@ def main():
 
     # Task 3 command line parameters
     parser.add_argument("-network", type=int, help="Create a random network, size of n")
-    parser.add_argument("-test_network", type=int, help="Run network tests")
+    parser.add_argument("-test_network", action='store_true', help="Run network tests")
 
 
     # Task 4 command line parameters
@@ -396,9 +396,10 @@ def main():
     # Task 3 calls
     if args.network:
         network = Network()
-        print("Mean degree: " + str(network.mean_degree()))
-        print("Average path length: " + str(network.average_path_length()))
-        print("Clustering co - efficient:" + str(network.clustering_co_efficient()))
+        network.make_random_network(args.network, args.connection_probability)
+        print("Mean degree: " + str(network.get_mean_degree()))
+        # print("Average path length: " + str(network.get_mean_path_length()))
+        # print("Clustering co - efficient:" + str(network.get_mean_clustering()))
         network.plot()
     if args.test_network:
         test_networks()
