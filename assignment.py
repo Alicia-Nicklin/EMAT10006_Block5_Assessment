@@ -218,11 +218,18 @@ def calculate_agreement(population, row, col, external=0.0):
     Returns:
             change_in_agreement (float)
     '''
+    if row > 0:
+        agreement += popualtion[row - 1, col] * popualtion[row, col]
+    if row < n_rows -1:
+        agreement += popualtion[row + 1, col] * population[row, col]
+    if col > 0:
+        agreement += population[row, col - 1] * population[row, col]
+    if col < n_cols -1:
+        agreement += population[rol, col + 1] * population[row, col]
 
-    # Your code for task 1 goes here
-    assert (0)
-
-    return np.random * population
+    change_in_agreement = agreement = external * popualtion[row, col]    
+    
+    return change_in_agreement
 
 
 def create_ising_population():
@@ -246,13 +253,14 @@ def ising_step(population, external=0.0):
     row = np.random.randint(0, n_rows)
     col = np.random.randint(0, n_cols)
 
-    agreement = calculate_agreement(population, row, col, external)
+    change_in_agreement = calculate_agreement(population, row, col, external)
 
-    if agreement < 0:
+    #Probabiltity of flipping opinion
+    flip_probability = np.exp(-change_in_agreement)
+    
+    if np.random.rand() < flip_probabilty:
         population[row, col] *= -1
 
-
-    # Your code for task 1 goes here
 
 def plot_ising(im, population):
     '''
@@ -311,6 +319,7 @@ def ising_main(population, alpha=None, external=0.0):
             ising_step(population, external)
         print('Step:', frame, end='\r')
         plot_ising(im, population)
+
 
 
 '''
