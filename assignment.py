@@ -227,9 +227,9 @@ def calculate_agreement(population, row, col, external=0.0):
     if col > 0:
         agreement += population[row, col - 1] * population[row, col]
     if col < n_cols -1:
-        agreement += population[rol, col + 1] * population[row, col]
+        agreement += population[row, col + 1] * population[row, col]
 
-    change_in_agreement = agreement = external * popualtion[row, col]    
+    change_in_agreement = agreement = external * population[row, col]    
     
     return change_in_agreement
 
@@ -260,7 +260,7 @@ def ising_step(population, external=0.0):
     #Probabiltity of flipping opinion
     flip_probability = np.exp(-change_in_agreement)
     
-    if np.random.rand() < flip_probabilty:
+    if np.random.rand() < flip_probability:
         population[row, col] *= -1
 
 
