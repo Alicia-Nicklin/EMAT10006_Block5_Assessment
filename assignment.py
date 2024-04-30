@@ -17,6 +17,7 @@ import matplotlib.cm as cm
 
 import argparse
 import random
+import sys
 
 class Queue:
     def __init__(self):
@@ -178,17 +179,22 @@ class Network:
                     node.connections[neighbour_index] = 1
                     self.nodes[neighbour_index].connections[index] = 1
 
+
+    def make_default_network(self, N):
+        self.nodes = []
+        for node_number in range(N):
+            value = np.random.random()
+            connections = [0 for _ in range(N)]
+            self.nodes.append(Node(value, node_number, connections))
+
+
     def make_random_network(self, N, connection_probability):
         '''
         This function makes a *random* network of size N.
         Each node is connected to each other node with probability p
         '''
 
-        self.nodes = []
-        for node_number in range(N):
-            value = np.random.random()
-            connections = [0 for _ in range(N)]
-            self.nodes.append(Node(value, node_number, connections))
+        self.make_default_network(N)
 
         for (index, node) in enumerate(self.nodes):
             for neighbour_index in range(index + 1, N):
@@ -198,12 +204,10 @@ class Network:
 
     def make_ring_network(self, N, neighbour_range=2):
 
-        # Your code  for task 4 goes here
-        self.nodes = []
-        for node_number in range(N):
-            value = np.random.random()
-            connections = [0 for _ in range(N)]
-            self.nodes.append(Node(value, node_number, connections))
+        # Your code  for task 4 goes
+
+        self.make_default_network(N)
+
         for (index, node) in enumerate(self.nodes):
                 for neighbour_index in range(index + 1, index + 1 + neighbour_range):
                     if neighbour_index >= N:
@@ -217,10 +221,9 @@ class Network:
         # Your code for task 4 goes here
         neighbour_range = 2
         self.nodes = []
-        for node_number in range(N):
-            value = np.random.random()
-            connections = [0 for _ in range(N)]
-            self.nodes.append(Node(value, node_number, connections))
+
+        self.make_default_network(N)
+
         for (index, node) in enumerate(self.nodes):
             if np.random.random() < re_wire_prob:
                 # Select a random node
@@ -335,7 +338,7 @@ This section contains code for the Ising Model - task 1 in the assignment
 
 def calculate_agreement(population, row, col, external=0.0):
     '''
-    This function should return the *change* in agreement that would result if the cell at (row, col) was to flip it's value
+    This function should return the extent to which a cell agrees with its neighbours.
     Inputs: population (numpy array)
             row (int)
             col (int)
@@ -343,21 +346,30 @@ def calculate_agreement(population, row, col, external=0.0):
     Returns:
             change_in_agreement (float)
     '''
+    n_rows, n_cols = population.shape
+    agreement = 0
+    if row > 0:
+        agreement += population[row - 1, col] * population[row, col]
+    if row < n_rows -1:
+        agreement += population[row + 1, col] * population[row, col]
+    if col > 0:
+        agreement += population[row, col - 1] * population[row, col]
+    if col < n_cols -1:
+        agreement += population[row, col + 1] * population[row, col]
 
-    # Your code for task 1 goes here
-    assert (0)
-
-    return np.random * population
+    change_in_agreement = agreement + external * population[row, col]    
+    
+    return change_in_agreement
 
 
 def create_ising_population():
     population = np.random.rand(10, 10)
     for i in range(10):
         for j in range(10):
-            if population[i][j] <= 0.5:
-                population[i][j] = -1
+            if population[i, j] <= 0.5:
+                population[i, j] = -1
             else:
-                population[i][j] = 1
+                population[i, j] = 1
     return population
 
 def ising_step(population, external=0.0):
@@ -371,13 +383,14 @@ def ising_step(population, external=0.0):
     row = np.random.randint(0, n_rows)
     col = np.random.randint(0, n_cols)
 
-    agreement = calculate_agreement(population, row, col, external=0.0)
+    change_in_agreement = calculate_agreement(population, row, col, external)
 
-    if agreement < 0:
+    #Probabiltity of flipping opinion
+    flip_probability = np.exp(-change_in_agreement)
+    
+    if np.random.rand() < flip_probability:
         population[row, col] *= -1
 
-
-    # Your code for task 1 goes here
 
 def plot_ising(im, population):
     '''
@@ -417,8 +430,8 @@ def test_ising():
     population = -np.ones((3, 3))
     assert (calculate_agreement(population, 1, 1, 1) == 3), "Test 7"
     assert (calculate_agreement(population, 1, 1, -1) == 5), "Test 8"
-    assert (calculate_agreement(population, 1, 1, 10) == 14), "Test 9"
-    assert (calculate_agreement(population, 1, 1, -10) == -6), "Test 10"
+    assert (calculate_agreement(population, 1, 1, 10) == -6), "Test 9"
+    assert (calculate_agreement(population, 1, 1, -10) == 14), "Test 10"
 
     print("Tests passed")
 
@@ -436,6 +449,7 @@ def ising_main(population, alpha=None, external=0.0):
             ising_step(population, external)
         print('Step:', frame, end='\r')
         plot_ising(im, population)
+
 
 
 '''
@@ -467,12 +481,12 @@ def main():
     parser = argparse.ArgumentParser()
 
     # Task 1 command line parameters
-    parser.add_argument("-ising_model", type=int, help="Ising model with default parameters")
+    parser.add_argument("-ising_model", action='store_true', help="Ising model with default parameters")
     parser.add_argument("-external", type=float, default=0.0,
                         help="Ising external value. Defaults to 0")
-    parser.add_argument("-alpha", type=int, default=1,
+    parser.add_argument("-alpha", type=float, default=1,
                         help="Ising temperature value. Defaults to 1")
-    parser.add_argument("-test_ising", type=int, help="Run Ising tests")
+    parser.add_argument("-test_ising", action='store_true', help="Run Ising tests")
 
 
     # Task 2 command line parameters
@@ -486,7 +500,7 @@ def main():
 
     # Task 3 command line parameters
     parser.add_argument("-network", type=int, help="Create a random network, size of n")
-    parser.add_argument("-test_network", type=int, help="Run network tests")
+    parser.add_argument("-test_network", action='store_true', help="Run network tests")
 
 
     # Task 4 command line parameters
@@ -499,6 +513,10 @@ def main():
     parser.add_argument("-re_wire", type=float, default=0.2, help="Re-wire probability. Defaults to 0.2")
 
     args = parser.parse_args()
+
+    if len(sys.argv) == 1:
+        parser.print_help(sys.stderr)
+        return
 
     # Task 1 calls
     if args.test_ising:
@@ -517,9 +535,10 @@ def main():
     # Task 3 calls
     if args.network:
         network = Network()
-        print("Mean degree: " + str(network.mean_degree()))
-        print("Average path length: " + str(network.average_path_length()))
-        print("Clustering co - efficient:" + str(network.clustering_co_efficient()))
+        network.make_random_network(args.network, args.connection_probability)
+        print("Mean degree: " + str(network.get_mean_degree()))
+        # print("Average path length: " + str(network.get_mean_path_length()))
+        # print("Clustering co - efficient:" + str(network.get_mean_clustering()))
         network.plot()
     if args.test_network:
         test_networks()

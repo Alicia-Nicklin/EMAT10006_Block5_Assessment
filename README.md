@@ -1,19 +1,18 @@
-Guys - please work in your branch and create pull requests for me to merge code into the master branch. Thanks.
+Guys - please work in your branch and let me know when you're done. I will then create pull requests for me to merge code into the master branch. Thanks.
 
 Run this program in the Terminal. PyCharm doesn't display updating plots well.
 
 ```
-usage: assignment.py [-h] [-ising_model ISING_MODEL] [-external EXTERNAL] [-alpha ALPHA] [-test_ising TEST_ISING] [-defuant DEFUANT] [-beta BETA] [-threshold THRESHOLD] [-test_defuant TEST_DEFUANT] [-network NETWORK] [-test_network TEST_NETWORK]
-                     [-random_network RANDOM_NETWORK] [-connection_probability CONNECTION_PROBABILITY] [-ring_network RING_NETWORK] [-range RANGE] [-small_world SMALL_WORLD] [-re_wire RE_WIRE]
+usage: assignment.py [-h] [-ising_model] [-external EXTERNAL] [-alpha ALPHA] [-test_ising] [-defuant DEFUANT] [-beta BETA] [-threshold THRESHOLD]
+                     [-test_defuant TEST_DEFUANT] [-network NETWORK] [-test_network TEST_NETWORK] [-random_network RANDOM_NETWORK]
+                     [-connection_probability CONNECTION_PROBABILITY] [-ring_network RING_NETWORK] [-range RANGE] [-small_world SMALL_WORLD] [-re_wire RE_WIRE]
 
 options:
   -h, --help            show this help message and exit
-  -ising_model ISING_MODEL
-                        Ising model with default parameters
+  -ising_model          Ising model with default parameters
   -external EXTERNAL    Ising external value. Defaults to 0
   -alpha ALPHA          Ising temperature value. Defaults to 1
-  -test_ising TEST_ISING
-                        Run Ising tests
+  -test_ising           Run Ising tests
   -defuant DEFUANT      Defuant model with default parameters
   -beta BETA            Defuant beta value. Defaults to 0.2
   -threshold THRESHOLD  Defuant threshold value. Defaults to 0.2
