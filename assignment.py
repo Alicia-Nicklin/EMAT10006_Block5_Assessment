@@ -5,7 +5,7 @@
 #                      FCP Summative Assessment                    #
 #                                                                  #
 #                          Archie Miller                           #
-#                           Tommy Newmanx                           #
+#                           Tommy Newmanz                         #
 #                          Alicia Nicklin                          #
 #                            Eric Ogden                            #
 #                                                                  #
