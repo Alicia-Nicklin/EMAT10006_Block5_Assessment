@@ -2,8 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
-'''TESTING COMMIT'''
-
 class Queue:
     def __init__(self):
         self.queue = []
@@ -53,46 +51,41 @@ class Network:
         # Build up a list of cluster counts, one for each node
         clustering = []
 
+
         for node in self.nodes:
 
+            triangle_count = 0  # initializes variable to sum number of triangles
             connections = node.connections
-            neighbours_in = [i for i, j in enumerate(node.connections) if j == 1]  # list of indicies of nieghbours
+            neighbours_in = [i for i, j in enumerate(node.connections) if j == 1]  # lists the indices of neighbours
             n = sum(connections)  # calculates the number of neighbours
-            possible_connections = n * (n - 1) / 2
+            possible_triangles = n * (n - 1) / 2    # calculates possible triangles from given formula
 
             if n <= 1:
                 clustering.append(0)  # case where there are one or no neighbours so no triangles can be formed
                 continue
 
-            triangle_count = 0
 
-            for n in neighbours_in:  # For each node (index) connected to the node we're considering
-                neighbour_n = self.nodes[n]  # Get that connected node
+            for n in neighbours_in:
+                neighbour_n = self.nodes[n]  # gets connected node
                 for each_original_neighbour in neighbours_in:
-                    if neighbour_n.connections[each_original_neighbour] == 1:
-                        # So here, we've gone to a connected node and
-                        # in its list of its connections there is a connection to another
-                        # connected node. Since both of these are child nodes on the original
-                        # node, we have a loop
+                    if neighbour_n.connections[each_original_neighbour] == 1: # check if node is a neighbour
 
                         triangle_count += 1
 
-            # By searching in this way, we've double counted the number of connections
-            # Since A connects to B and B to A in our model
-            # So one connection is counted in both directions
 
-            triangle_count = triangle_count / 2
+            # as every connection is counted in both directions the final value is divided by 2:
+            true_triangles = triangle_count / 2
 
-            clustering.append(triangle_count / possible_connections)
+            clustering.append(true_triangles / possible_triangles)
 
         return clustering
 
     def get_mean_clustering(self):
 
-        numberOfNodes = len(self.nodes)
+        number_of_nodes = len(self.nodes)
         clustering = self.get_clustering()
 
-        mean_clustering = sum(clustering) / numberOfNodes
+        mean_clustering = sum(clustering) / number_of_nodes #calculates average
 
         return mean_clustering
 
