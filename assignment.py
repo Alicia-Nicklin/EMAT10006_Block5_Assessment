@@ -53,7 +53,7 @@ class Network:
 
     def get_mean_degree(self):
         '''
-        Calculates the average of the degree of all nodes in the network
+        Calculates the average of the degree of all nodes in the networkss
         '''
 
         count = 0 # initializes variable to sum number of nodes
