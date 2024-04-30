@@ -229,7 +229,7 @@ def calculate_agreement(population, row, col, external=0.0):
     if col < n_cols -1:
         agreement += population[row, col + 1] * population[row, col]
 
-    change_in_agreement = agreement = external * population[row, col]    
+    change_in_agreement = agreement + external * population[row, col]    
     
     return change_in_agreement
 
