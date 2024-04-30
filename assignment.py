@@ -19,8 +19,23 @@ import argparse
 import random
 import sys
 
-class Node:
+class Queue:
+    def __init__(self):
+        self.queue = []
 
+    def push(self,item):
+        self.queue.append(item)
+
+    def pop(self):
+        return self.queue.pop(0)
+
+    def is_empty(self):
+        return len(self.queue)==0
+
+
+
+
+class Node:
     def __init__(self, value, number, connections=None):
         self.index = number
         self.connections = connections
@@ -37,19 +52,132 @@ class Network:
             self.nodes = nodes
 
     def get_mean_degree(self):
+        '''
+        Calculates the average of the degree of all nodes in the networkss
+        '''
 
-        # Your code  for task 3 goes here
-        assert(0)
+        count = 0 # initializes variable to sum number of nodes
+
+        for node in self.nodes: # iterates through nodes in network
+                count += sum(node.connections) # adds number of connections to count variable
+
+        # calculates average by dividing count by number of nodes
+        return count / len(self.nodes)
+
+    def get_clustering(self):
+        # Build up a list of cluster counts, one for each node
+        clustering = []
+
+
+        for node in self.nodes:
+
+            triangle_count = 0  # initializes variable to sum number of triangles
+            connections = node.connections
+            neighbours_in = [i for i, j in enumerate(node.connections) if j == 1]  # lists the indices of neighbours
+            n = sum(connections)  # calculates the number of neighbours
+            possible_triangles = n * (n - 1) / 2    # calculates possible triangles from given formula
+
+            if n <= 1:
+                clustering.append(0)  # case where there are one or no neighbours so no triangles can be formed
+                continue
+
+
+            for n in neighbours_in:
+                neighbour_n = self.nodes[n]  # gets connected node
+                for each_original_neighbour in neighbours_in:
+                    if neighbour_n.connections[each_original_neighbour] == 1: # check if node is a neighbour
+
+                        triangle_count += 1
+
+
+            # as every connection is counted in both directions the final value is divided by 2:
+            true_triangles = triangle_count / 2
+
+            clustering.append(true_triangles / possible_triangles)
+
+        return clustering
 
     def get_mean_clustering(self):
 
-        # Your code for task 3 goes here
-        assert(0)
+        number_of_nodes = len(self.nodes)
+        clustering = self.get_clustering()
 
+        mean_clustering = sum(clustering) / number_of_nodes #calculates average
+
+        return mean_clustering
+
+
+    def bfs_path_length(self, start_node:Node, end_node : Node):
+        '''
+        A BFS using queues was used with added path length variable to find shortest path length
+        '''
+
+        queue = Queue()
+        visited = []
+        path_length = 0
+
+        queue.push((start_node,0))
+        visited.append(start_node)
+
+        while not queue.is_empty():
+            (node_to_check,current_path_length) = queue.pop()
+
+
+            if node_to_check == end_node:
+                path_length = current_path_length
+                break
+
+            for index,is_connected in enumerate(node_to_check.connections):
+                neighbour = self.nodes[index]
+                if is_connected and neighbour not in visited:
+                    queue.push((neighbour, current_path_length + 1))
+                    visited.append(neighbour)
+                    neighbour.parent = node_to_check
+
+
+        return path_length
+
+    def get_path_length(self,index):
+        lengths = []
+
+        for node in self.nodes:
+            if self.nodes[index] != node: #code only runs if it is not self nodes
+                lengths.append((self.bfs_path_length(self.nodes[index], node)))
+
+        return lengths
     def get_mean_path_length(self):
+        """
+        for this function we used an equation for mean path length
+        """
+        path_sum = 0
+        for index, node in enumerate(self.nodes):
+            path_lengths = self.get_path_length(node.index)
+            path_sum += sum(path_lengths)
 
-        # Your code for task 3 goes here
-        assert(0)
+        mean_path_length = (1/((len(self.nodes)) * ((len(self.nodes) - 1))))  * path_sum
+
+        return(mean_path_length)
+
+
+
+
+    def make_random_network(self, N, connection_probability):
+        '''
+        This function makes a *random* network of size N.
+        Each node is connected to each other node with probability p
+        '''
+
+        self.nodes = []
+        for node_number in range(N):
+            value = np.random.random()
+            connections = [0 for _ in range(N)]
+            self.nodes.append(Node(value, node_number, connections))
+
+        for (index, node) in enumerate(self.nodes):
+            for neighbour_index in range(index + 1, N):
+                if np.random.random() < connection_probability:
+                    node.connections[neighbour_index] = 1
+                    self.nodes[neighbour_index].connections[index] = 1
 
 
     def make_default_network(self, N):
