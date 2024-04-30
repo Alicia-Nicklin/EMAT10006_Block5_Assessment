@@ -218,11 +218,18 @@ def calculate_agreement(population, row, col, external=0.0):
     Returns:
             change_in_agreement (float)
     '''
+    if row > 0:
+        agreement += popualtion[row - 1, col] * popualtion[row, col]
+    if row < n_rows -1:
+        agreement += popualtion[row + 1, col] * population[row, col]
+    if col > 0:
+        agreement += population[row, col - 1] * population[row, col]
+    if col < n_cols -1:
+        agreement += population[rol, col + 1] * population[row, col]
 
-    # Your code for task 1 goes here
-    assert (0)
-
-    return np.random * population
+    change_in_agreement = agreement = external * popualtion[row, col]    
+    
+    return change_in_agreement
 
 
 def create_ising_population():
@@ -246,13 +253,14 @@ def ising_step(population, external=0.0):
     row = np.random.randint(0, n_rows)
     col = np.random.randint(0, n_cols)
 
-    agreement = calculate_agreement(population, row, col, external)
+    change_in_agreement = calculate_agreement(population, row, col, external)
 
-    if agreement < 0:
+    #Probabiltity of flipping opinion
+    flip_probability = np.exp(-change_in_agreement)
+    
+    if np.random.rand() < flip_probabilty:
         population[row, col] *= -1
 
-
-    # Your code for task 1 goes here
 
 def plot_ising(im, population):
     '''
@@ -313,22 +321,180 @@ def ising_main(population, alpha=None, external=0.0):
         plot_ising(im, population)
 
 
+
 '''
 ==============================================================================================================
 This section contains code for the Defuant Model - task 2 in the assignment
 ==============================================================================================================
 '''
 
+def plot_histogram(population):
+    '''
+    This function plots the histogram from the final results after all iterations
+    have been completed and sets the bin sizes accordingly and labels all axis
+    and titles accordingly
+    '''
+    plt.figure()
+    plt.hist(population, bins=np.arange(0, 1.1, 0.1), alpha=0.7)
+    plt.xlabel("Opinions")
+    plt.ylabel("Frequency")
+    plt.title("Opinions Frequency Distribution")
+    plt.grid(False)
+    plt.show()
 
-def defuant_main(beta=0.2, threshold=0.2):
+def plot_opinions(population_history):
+    '''
+    This function plots the scatter graph of each opinion at each timestep
+    by taking the stored array and plotting each element at each iteration
+    and labels the graphs accordingly
+    '''
+    plt.figure()
+    iterations = len(population_history)
+    num_individuals = len(population_history[0])
+    for i in range(num_individuals):
+        opinions = [population_history[j][i] for j in range(iterations)]
+        plt.scatter(range(iterations), opinions, color='red')
 
-    # Your code for task 2 goes here
-    assert (0)
+    plt.xlabel("Time Step")
+    plt.ylabel("Opinion")
+    plt.title("Opinions Over Time")
+    plt.grid(False)
+    plt.show()
+
+def population_indexes(population, population_size, i_index):
+    '''
+    This function randomly picks a person in the population and finds the opinion rating of that person and passes
+    it back to the function when called upon
+    '''
+
+    i_b_index = (i_index - 1) % population_size
+    i_a_index = (i_index + 1) % population_size
+
+    i_b = population[i_b_index]
+    i = population[i_index]
+    i_a = population[i_a_index]
+
+    return i_b, i, i_a, i_b_index, i_a_index
+
+def update_opinions_after(i, i_a, threshold, beta):
+    '''
+    This function controls the neighbour after the selected person and updates
+    that persons opinion using the equation given if their opinion is in the threshold
+    '''
+    if abs(i - i_a) < threshold:
+        i_new = i + (beta * (i_a - i))
+        i_a_new = i_a + (beta * (i - i_a))
+        return i_new, i_a_new
+    else:
+        return i, i_a
+
+
+def update_opinions_before(i, i_b, threshold, beta):
+    '''
+       This function controls the neighbour before the selected person and updates
+       that persons opinion using the equation given if their opinion is in the threshold
+       '''
+    if abs(i - i_b) < threshold:
+        i_new = i + (beta * (i_b - i))
+        i_b_new = i_b + (beta * (i - i_b))
+        return i_new, i_b_new
+    else:
+        return i, i_b
+
+
+def parameters(population, population_size, beta, threshold, iterations):
+    '''
+    This function calls the population_indexes function to get the random person in the array,
+    then it randomly picks a number 1 or 2 to determine if the neighbour
+    is before or after the individual and gets the updated value and inputs it
+    into the array.
+    The entire array then gets stored in population_history variable for graphing later.
+    It then calls both plot functions which display the graphs respectively
+    '''
+    population_history = []
+    for _ in range(iterations):
+        i_index = random.randint(0, population_size - 1)
+        i_b, i, i_a, i_b_index, i_a_index = population_indexes(population, population_size, i_index)
+
+        rand_counter = random.randint(1, 2)
+        if rand_counter == 1:
+            i_new, i_a_new = update_opinions_after(i, i_a, threshold, beta)
+            population[i_index] = i_new
+            population[i_a_index] = i_a_new
+        elif rand_counter == 2:
+            i_new, i_b_new = update_opinions_before(i, i_b, threshold, beta)
+            population[i_index] = i_new
+            population[i_b_index] = i_b_new
+
+        population_history.append(population.copy())
+
+    plot_histogram(population)
+    plot_opinions(population_history)
+
+
+
+def initial_population(population_size):
+    '''
+    This function creates the numpy array of numbers from 0 to 1
+    with the given population size
+    '''
+    population = np.random.rand(population_size)
+    return population
+
+def defuant_main(beta, threshold):
+    '''
+    This function gets each initial condition from the parser and runs the parameters function
+    with the initial conditions
+    '''
+
+
+
+    population_size = 100
+    population = initial_population(population_size)
+    parameters(population, population_size, beta, threshold, iterations=1000)
+    print(threshold, "is the threshold value,", beta, "is the beta value")
+
 
 def test_defuant():
+    '''
+    Calls the individual test functions for each individual function
+    '''
+    test_initial_population()
+    test_update_opinions()
+    test_population_indexes()
 
-    # Your code for task 2 goes here
-    assert (0)
+def test_initial_population():
+    '''
+    Runs the test functions for the initial_population function
+    '''
+    population_size = 50
+    assert (len(initial_population(population_size))) == population_size
+    print("Initial Population Test function passed")
+
+def test_update_opinions():
+    '''
+    Runs the test functions for the update_opinions function
+    '''
+    assert (update_opinions_after(0.8, 0.6, 0.5, 0.5)) == (0.7, 0.7)
+    assert (update_opinions_after(0.8, 0.1, 0.5, 0.5)) == (0.8, 0.1)
+
+    assert (update_opinions_before(0.2, 0.6, 0.6, 0.2)) == (0.28, 0.52)
+    assert (update_opinions_before(0.3, 0.9, 0.3, 0.3)) == (0.3, 0.9)
+
+    print("Updated opinions test passed")
+
+def test_population_indexes():
+    '''
+    Runs the test functions for the population_indexes function
+    '''
+    assert (population_indexes(population = [0.1, 0.7, 0.3, 0.9, 0.4, 0.5, 0.5, 0.2, 0.4, 0.8],
+    population_size = 10, i_index = 2) == (0.7, 0.3, 0.9, 1, 3))
+    assert (population_indexes(population=[0.1, 0.7, 0.3, 0.9, 0.4, 0.5, 0.5, 0.2, 0.4, 0.8],
+    population_size=10, i_index=0) == (0.8, 0.1, 0.7, 9, 1))
+    print("Population Indexes test passed")
+
+
+
 
 '''
 ==============================================================================================================
@@ -351,12 +517,12 @@ def main():
 
 
     # Task 2 command line parameters
-    parser.add_argument("-defuant", type=int, help="Defuant model with default parameters")
-    parser.add_argument("-beta", type=float, default=0.2,
-                        help="Defuant beta value. Defaults to 0.2")
-    parser.add_argument("-threshold", type=float, default=0.2,
-                        help="Defuant threshold value. Defaults to 0.2")
-    parser.add_argument("-test_defuant", type=int, help="Run defuant tests")
+    parser.add_argument("-defuant", action='store_true', help="Defuant model with default parameters")
+    parser.add_argument("-beta", type=float, default=0.5,
+                        help="Defuant beta value. Defaults to 0.5")
+    parser.add_argument("-threshold", type=float, default=0.5,
+                        help="Defuant threshold value. Defaults to 0.5")
+    parser.add_argument("-test_defuant", action='store_true', help="Run defuant tests")
 
 
     # Task 3 command line parameters
