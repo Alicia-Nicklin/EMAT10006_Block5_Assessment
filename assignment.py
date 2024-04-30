@@ -363,9 +363,9 @@ def calculate_agreement(population, row, col, external=0.0):
 
 
 def create_ising_population():
-    population = np.random.rand(10, 10)
-    for i in range(10):
-        for j in range(10):
+    population = np.random.rand(100, 100)
+    for i in range(100):
+        for j in range(100):
             if population[i, j] <= 0.5:
                 population[i, j] = -1
             else:
