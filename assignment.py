@@ -218,10 +218,12 @@ def calculate_agreement(population, row, col, external=0.0):
     Returns:
             change_in_agreement (float)
     '''
+    n_rows, n_cols = population.shape
+    agreement = 0
     if row > 0:
-        agreement += popualtion[row - 1, col] * popualtion[row, col]
+        agreement += population[row - 1, col] * population[row, col]
     if row < n_rows -1:
-        agreement += popualtion[row + 1, col] * population[row, col]
+        agreement += population[row + 1, col] * population[row, col]
     if col > 0:
         agreement += population[row, col - 1] * population[row, col]
     if col < n_cols -1:
