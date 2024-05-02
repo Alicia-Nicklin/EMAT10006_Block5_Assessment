@@ -643,7 +643,7 @@ def test_population_indexes():
 
 '''
 ==============================================================================================================
-This section contains code for the main function- you should write some code for handling flags here
+This section contains code for the main function
 ==============================================================================================================
 '''
 
