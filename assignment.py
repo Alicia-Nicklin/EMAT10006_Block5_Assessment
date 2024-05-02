@@ -53,7 +53,7 @@ class Network:
 
     def get_mean_degree(self):
         '''
-        Calculates the average of the degree of all nodes in the networkss
+        Calculates the average of the degree of all nodes in the networks
         '''
 
         count = 0 # initializes variable to sum number of nodes
@@ -109,30 +109,38 @@ class Network:
 
     def bfs_path_length(self, start_node:Node, end_node : Node):
         '''
-        A BFS using queues was used with added path length variable to find shortest path length
+
+        Finds the shortest path length between start_node and end_node using Breadth-First Search (BFS) with a queue.
+
+        Args:
+            start_node (Node): The starting node for the search.
+            end_node (Node): The target node for the search.
+
+        Returns:
+            int: The length of the shortest path between start_node and end_node.
+
         '''
 
         queue = Queue()
-        visited = []
+        visited = []    # visited list to not revisit already visited nodes
         path_length = 0
 
-        queue.push((start_node,0))
+        queue.push((start_node,0)) # add initial node to queue
         visited.append(start_node)
 
-        while not queue.is_empty():
+        while not queue.is_empty(): # iterates until queue is empty
             (node_to_check,current_path_length) = queue.pop()
 
 
             if node_to_check == end_node:
-                path_length = current_path_length
+                path_length = current_path_length   # updates path length when end node is found
                 break
 
-            for index,is_connected in enumerate(node_to_check.connections):
+            for index,is_connected in enumerate(node_to_check.connections):     # iterates over the nodes connections
                 neighbour = self.nodes[index]
                 if is_connected and neighbour not in visited:
-                    queue.push((neighbour, current_path_length + 1))
+                    queue.push((neighbour, current_path_length + 1))    # queues neighbor with updated path length
                     visited.append(neighbour)
-                    neighbour.parent = node_to_check
 
 
         return path_length
@@ -161,23 +169,23 @@ class Network:
 
 
 
-    def make_random_network(self, N, connection_probability):
-        '''
-        This function makes a *random* network of size N.
-        Each node is connected to each other node with probability p
-        '''
-
-        self.nodes = []
-        for node_number in range(N):
-            value = np.random.random()
-            connections = [0 for _ in range(N)]
-            self.nodes.append(Node(value, node_number, connections))
-
-        for (index, node) in enumerate(self.nodes):
-            for neighbour_index in range(index + 1, N):
-                if np.random.random() < connection_probability:
-                    node.connections[neighbour_index] = 1
-                    self.nodes[neighbour_index].connections[index] = 1
+    # def make_random_network(self, N, connection_probability):
+    #     '''
+    #     This function makes a *random* network of size N.
+    #     Each node is connected to each other node with probability p
+    #     '''
+    #
+    #     self.nodes = []
+    #     for node_number in range(N):
+    #         value = np.random.random()
+    #         connections = [0 for _ in range(N)]
+    #         self.nodes.append(Node(value, node_number, connections))
+    #
+    #     for (index, node) in enumerate(self.nodes):
+    #         for neighbour_index in range(index + 1, N):
+    #             if np.random.random() < connection_probability:
+    #                 node.connections[neighbour_index] = 1
+    #                 self.nodes[neighbour_index].connections[index] = 1
 
 
     def make_default_network(self, N):
@@ -295,8 +303,8 @@ def test_networks():
 
     print("Testing ring network")
     assert (network.get_mean_degree() == 2), network.get_mean_degree()
-    assert (network.get_clustering() == 0), network.get_clustering()
-    assert (network.get_path_length() == 2.777777777777778), network.get_path_length()
+    assert (network.get_mean_clustering() == 0), network.get_mean_clustering()
+    assert (network.get_mean_path_length() == 2.777777777777778), network.get_mean_path_length()
 
     nodes = []
     num_nodes = 10
@@ -309,8 +317,8 @@ def test_networks():
 
     print("Testing one-sided network")
     assert (network.get_mean_degree() == 1), network.get_mean_degree()
-    assert (network.get_clustering() == 0), network.get_clustering()
-    assert (network.get_path_length() == 5), network.get_path_length()
+    assert (network.get_mean_clustering() == 0), network.get_mean_clustering()
+    assert (network.get_mean_path_length() == 5), network.get_mean_path_length()
 
     nodes = []
     num_nodes = 10
@@ -323,8 +331,8 @@ def test_networks():
 
     print("Testing fully connected network")
     assert (network.get_mean_degree() == num_nodes - 1), network.get_mean_degree()
-    assert (network.get_clustering() == 1), network.get_clustering()
-    assert (network.get_path_length() == 1), network.get_path_length()
+    assert (network.get_mean_clustering() == 1), network.get_mean_clustering()
+    assert (network.get_mean_path_length() == 1), network.get_mean_path_length()
 
     print("All tests passed")
 
@@ -692,8 +700,8 @@ def main():
         network = Network()
         network.make_random_network(args.network, args.connection_probability)
         print("Mean degree: " + str(network.get_mean_degree()))
-        # print("Average path length: " + str(network.get_mean_path_length()))
-        # print("Clustering co - efficient:" + str(network.get_mean_clustering()))
+        print("Average path length: " + str(network.get_mean_path_length()))
+        print("Clustering coefficient:" + str(network.get_mean_clustering()))
         network.plot()
     if args.test_network:
         test_networks()
