@@ -185,7 +185,8 @@ class Network:
         """
         path_sum = 0
         for index, node in enumerate(self.nodes):
-            path_lengths = self.get_path_length(node.index) # Gets a list of path lengths from the current node to all other nodes
+            # Gets a list of path lengths from the current node to all other nodes
+            path_lengths = self.get_path_length(node.index)
             path_sum += sum(path_lengths)   # Sums path lengths
 
         mean_path_length = (1/((len(self.nodes)) * ((len(self.nodes) - 1))))  * path_sum
@@ -265,7 +266,7 @@ class Network:
             node_y = network_radius * np.sin(node_angle)
 
             color = 'white' if node.opinion == 1 else 'black'
-            circle = plt.Circle((node_x, node_y), 10, color=color, ec='none')  # Adjust circle radius as needed
+            circle = plt.Circle((node_x, node_y), 10, color=color, ec='none')
             ax.add_patch(circle)
             circles.append(circle)
 
@@ -832,9 +833,9 @@ def main():
     parser.add_argument("-random_network", type=int, help="Create a random network, size of n")
     parser.add_argument("-connection_probability", type=float, default=0.3,
                         help="Connection probability. Defaults to 0.3")
-    parser.add_argument("-ring_network", type=int, help="Create a ring network with a range of 1 and a size of n")
+    parser.add_argument("-ring_network", type=int, help="Create a ring network range 1, size of n")
     parser.add_argument("-range", type=int, default=2, help="Network range. Defaults to 2")
-    parser.add_argument("-small_world", type=int, help="Create a small-worlds network with default parameters, size n")
+    parser.add_argument("-small_world", type=int, help="Small-worlds network default parameters, size n")
     parser.add_argument("-re_wire", type=float, default=0.2, help="Re-wire probability. Defaults to 0.2")
 
 
