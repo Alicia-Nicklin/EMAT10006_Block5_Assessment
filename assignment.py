@@ -791,7 +791,6 @@ def main():
     if args.test_defuant:
         test_defuant()
 
-
     # Task 3 calls
     if args.network:
         network = Network()
