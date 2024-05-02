@@ -1,4 +1,4 @@
-2####################################################################
+####################################################################
 #                                                                  #
 #              EMAT10006 Further Computer Programming  2024        #
 #                                                                  #
@@ -281,6 +281,15 @@ class Network:
         plt.ioff()  # Disable the interactive mode
         plt.show()
 
+    def opinions_plotting(self,steps = 100):
+        opinions = []
+        for step in range(steps):
+            for node in self.nodes:
+                opinions.append(sum(node.opinions)/len(self.nodes))
+        plt.scatter(steps,opinions)
+        plt.show()
+
+
 
     def make_default_network(self, N):
         self.nodes = []
@@ -401,7 +410,7 @@ def test_networks():
     print("Testing ring network")
     assert (network.get_mean_degree() == 2), network.get_mean_degree()
     assert (network.get_mean_clustering() == 0), network.get_mean_clustering()
-    assert (network.get_mean_path_length() == 2.777777777777778), network.get_mean_path_length()
+    assert (network.get_mean_path_length() == 2.7777777777777777), network.get_mean_path_length()
 
     nodes = []
     num_nodes = 10
@@ -800,6 +809,9 @@ def main():
     parser.add_argument("-small_world", type=int, help="Create a small-worlds network with default parameters, size n")
     parser.add_argument("-re_wire", type=float, default=0.2, help="Re-wire probability. Defaults to 0.2")
 
+
+    parser.add_argument("-plot_opinions")
+
     args = parser.parse_args()
 
     if len(sys.argv) == 1:
@@ -852,7 +864,9 @@ def main():
         network.plot()
 
     # Task 5
-
+    if args.plot_opinions:
+        network = Network()
+        network.opinions_plotting(args.plot_opinions)
 
 
 
