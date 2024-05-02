@@ -65,6 +65,12 @@ class Network:
         return count / len(self.nodes)
 
     def get_clustering(self):
+        '''
+         Computes the clustering coefficient for each node in the graph.
+
+        Returns:
+            A list of clustering coefficients for all nodes in the graph.
+        '''
         # Build up a list of cluster counts, one for each node
         clustering = []
 
@@ -98,11 +104,13 @@ class Network:
         return clustering
 
     def get_mean_clustering(self):
+        '''
+            Calculates the average of the clustering coefficient of all nodes in the networks
+        '''
+        number_of_nodes = len(self.nodes)   # gets total number of nodes in the graph
+        clustering = self.get_clustering()  # gets the clustering coefficient of all nodes
 
-        number_of_nodes = len(self.nodes)
-        clustering = self.get_clustering()
-
-        mean_clustering = sum(clustering) / number_of_nodes #calculates average
+        mean_clustering = sum(clustering) / number_of_nodes # calculates average
 
         return mean_clustering
 
@@ -146,21 +154,32 @@ class Network:
         return path_length
 
     def get_path_length(self,index):
+        """
+            Computes the path lengths from the node at the given index to all other nodes in the graph.
+            Args:
+                index (int): The index of the node for which the path lengths are computed.
+            Returns:
+                list: A list containing the path lengths from the given node to all other nodes in the graph.
+            """
         lengths = []
 
         for node in self.nodes:
-            if self.nodes[index] != node: #code only runs if it is not self nodes
+            if self.nodes[index] != node: #Skips self node
                 lengths.append((self.bfs_path_length(self.nodes[index], node)))
 
         return lengths
     def get_mean_path_length(self):
         """
-        for this function we used an equation for mean path length
+           Calculates the mean path length for the graph using the equation:
+        mean_path_length = (1 / (n * (n - 1))) * sum_of_all_path_lengths
+
+        Returns:
+        float: The mean path length for the graph.
         """
         path_sum = 0
         for index, node in enumerate(self.nodes):
-            path_lengths = self.get_path_length(node.index)
-            path_sum += sum(path_lengths)
+            path_lengths = self.get_path_length(node.index) # Gets a list of path lengths from the current node to all other nodes
+            path_sum += sum(path_lengths)   # Sums path lengths
 
         mean_path_length = (1/((len(self.nodes)) * ((len(self.nodes) - 1))))  * path_sum
 
@@ -639,8 +658,8 @@ This section contains code for the main function- you should write some code for
 '''
 
 
-def main():
 
+def arguments():
     parser = argparse.ArgumentParser()
 
     # Task 1 command line parameters
@@ -675,11 +694,14 @@ def main():
     parser.add_argument("-small_world", type=int, help="Create a small-worlds network with default parameters, size n")
     parser.add_argument("-re_wire", type=float, default=0.2, help="Re-wire probability. Defaults to 0.2")
 
+def main():
+    parser = argparse.ArgumentParser()
     args = parser.parse_args()
 
     if len(sys.argv) == 1:
         parser.print_help(sys.stderr)
-        return
+
+
 
     # Task 1 calls
     if args.test_ising:
