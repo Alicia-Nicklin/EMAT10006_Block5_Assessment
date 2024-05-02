@@ -259,6 +259,18 @@ class Network:
         circles = []
         lines = []
 
+        # Rather than just set "0.3 * num_nodes" as the radius of each small circle
+        # lets calculate it using basic trig
+
+        each_small_circle_radius = 0.3 * num_nodes
+        if (num_nodes>2):
+            each_arc_angle = 360 / num_nodes
+            step1 = network_radius * np.sin(np.deg2rad(each_arc_angle))
+            step2 = 180-each_arc_angle
+            step3 = step2/2
+            step4 = 2 * np.sin(np.deg2rad(step3))
+            each_small_circle_radius = (step1 / step4) - 2  # This -2 is just to put a tiny bit of space between
+
         # Initial setup for nodes and connections
         for i, node in enumerate(self.nodes):
             node_angle = i * 2 * np.pi / num_nodes
@@ -266,7 +278,7 @@ class Network:
             node_y = network_radius * np.sin(node_angle)
 
             color = 'white' if node.opinion == 1 else 'black'
-            circle = plt.Circle((node_x, node_y), 10, color=color, ec='none')
+            circle = plt.Circle((node_x, node_y), each_small_circle_radius, color=color, ec='none')
             ax.add_patch(circle)
             circles.append(circle)
 
