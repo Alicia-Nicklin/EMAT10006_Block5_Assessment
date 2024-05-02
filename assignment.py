@@ -19,6 +19,12 @@ import argparse
 import random
 import sys
 
+'''
+==============================================================================================================
+This section contains code for the Networks Dev - task 3 in the assignment
+==============================================================================================================
+'''
+
 class Queue:
     def __init__(self):
         self.queue = []
@@ -185,27 +191,11 @@ class Network:
 
         return(mean_path_length)
 
-
-
-
-    # def make_random_network(self, N, connection_probability):
-    #     '''
-    #     This function makes a *random* network of size N.
-    #     Each node is connected to each other node with probability p
-    #     '''
-    #
-    #     self.nodes = []
-    #     for node_number in range(N):
-    #         value = np.random.random()
-    #         connections = [0 for _ in range(N)]
-    #         self.nodes.append(Node(value, node_number, connections))
-    #
-    #     for (index, node) in enumerate(self.nodes):
-    #         for neighbour_index in range(index + 1, N):
-    #             if np.random.random() < connection_probability:
-    #                 node.connections[neighbour_index] = 1
-    #                 self.nodes[neighbour_index].connections[index] = 1
-
+    '''
+    ==============================================================================================================
+    This section contains code for the Small- Networks- Devs - task 4  in the assignment
+    ==============================================================================================================
+    '''
 
     def make_default_network(self, N):
         self.nodes = []
@@ -648,7 +638,7 @@ def test_population_indexes():
 
 '''
 ==============================================================================================================
-This section contains code for the main function- you should write some code for handling flags here
+This section contains code for the main function
 ==============================================================================================================
 '''
 
@@ -738,6 +728,8 @@ def main():
         network.plot()
 
     # Task 5
+
+
 
 
 
