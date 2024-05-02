@@ -194,49 +194,58 @@ class Network:
 
     '''
     ==============================================================================================================
-    This section contains code for the Small- Networks- Devs - task 4  in the assignment
+    This section contains code for the Small- Networks- Devs - task 5  in the assignment
     ==============================================================================================================
     '''
-    def make_default_network_ising(self, N):
-        self.nodes = []
-        for node_number in range(N):
-            opinion = np.random.choice([-1, 1])
-            connections = [0] * N
-            self.nodes.append(Node(value=opinion, number=node_number, connections=connections, opinion=opinion))
-
-    def make_small_world_network_opinion(self, N, re_wire_prob=0.2):
-        # Your code for task 4 goes here
-        neighbour_range = 2
-        self.nodes = []
-
-        self.make_default_network_ising(N)
-
-        for (index, node) in enumerate(self.nodes):
-            if np.random.random() < re_wire_prob:
-                # Select a random node
-                while True:
-                    random_node = random.randint(0, N - 1)
-                    if node.connections[index] == 0:
-                        node.connections[random_node] = 1
-                        self.nodes[random_node].connections[index] = 1
-                        break
-            else:
-                for neighbour_index in range(index + 1, index + 1 + neighbour_range):
-                    if neighbour_index >= N:
-                        neighbour_index = neighbour_index - N
-                    node.connections[neighbour_index] = 1
-                    self.nodes[neighbour_index].connections[index] = 1
 
     def update_opinions_ising(self, external=0.0, temperature=1.0):
-        for node in self.nodes:
-            total_effect = sum(self.nodes[n].opinion for n, connected in enumerate(node.connections) if connected)
-            total_effect += external * node.opinion
-            flip_probability = np.exp(-2 * total_effect / temperature)
 
-            if np.random.rand() < flip_probability:
+        for node in self.nodes:
+
+            total_effect = 0
+
+            node_position = 0
+            for each_connection in node.connections:
+                if each_connection == 1:
+                    total_effect += node.opinion * self.nodes[node_position].opinion
+                node_position = node_position + 1
+
+            # total_effect = sum(self.nodes[n].opinion for n, connected in enumerate(node.connections) if connected)
+
+            total_effect += external * node.opinion
+            # flip_probability = np.exp(-2 * total_effect / temperature)
+            #
+            # if np.random.rand() < flip_probability:
+            #     node.opinion *= -1
+
+            if total_effect < 0:
                 node.opinion *= -1
+            else:
+                if total_effect > 0:
+                    # The first extension of Task 1 is to model the fact that we might stick to our principles
+                    # even if this increases disagreement with our neighbours.
+                    # We model this by flipping (with a calculated probability) even with a positive agreement
+
+                    flip_probability = np.exp((-(total_effect)) / temperature)
+                    # print("Flip probability: ", flip_probability)
+
+                    # Choose a randon number, if this is bigger than the flip_probability, we flip
+                    random_flip = random.random()
+                    if flip_probability > random_flip:
+                        node.opinion *= -1
+
 
     def simulate_ising(self, steps=100, external=0.0, temperature=1.0):
+
+        '''
+        When we simulate Ising on a network, we have called the code to create a small world network
+        That code sets each node's value to a random value between 0 and 1.
+        We need to change this at the start of Task 5 to be either a -1 or +1 at random
+        '''
+        for node in self.nodes:
+            node.opinion = np.random.choice([-1, 1])
+
+
         plt.ion()  # Enable the interactive mode
         fig, ax = plt.subplots()  # Create a figure and axis object
         ax.set_axis_off()  # Hide the axes
@@ -255,30 +264,49 @@ class Network:
             node_x = network_radius * np.cos(node_angle)
             node_y = network_radius * np.sin(node_angle)
 
-            color = 'purple' if node.opinion == 1 else 'white'
+            color = 'white' if node.opinion == 1 else 'black'
             circle = plt.Circle((node_x, node_y), 10, color=color, ec='none')  # Adjust circle radius as needed
             ax.add_patch(circle)
             circles.append(circle)
 
             for neighbour_index in range(num_nodes):
-                if node.connections[neighbour_index]:
-                    neighbour_angle = neighbour_index * 2 * np.pi / num_nodes
-                    neighbour_x = network_radius * np.cos(neighbour_angle)
-                    neighbour_y = network_radius * np.sin(neighbour_angle)
-                    line, = ax.plot([node_x, neighbour_x], [node_y, neighbour_y], color='black')
-                    lines.append(line)
+                  if node.connections[neighbour_index]:
+                      neighbour_angle = neighbour_index * 2 * np.pi / num_nodes
+                      neighbour_x = network_radius * np.cos(neighbour_angle)
+                      neighbour_y = network_radius * np.sin(neighbour_angle)
+                      line, = ax.plot([node_x, neighbour_x], [node_y, neighbour_y], color='grey', alpha=0.2)
+                      lines.append(line)
+
+        plt.draw()
+
+        mean_opinion_over_time = []
 
         for frame in range(steps):
             self.update_opinions_ising(external, temperature)
             # Update the positions of circles and lines based on opinions
+
+            mean_opinion = 0
+
             for i, node in enumerate(self.nodes):
-                circles[i].set_color('purple' if node.opinion == 1 else 'pink')
+
+                mean_opinion += node.opinion
+
+                circles[i].set_color('white' if node.opinion == 1 else 'black')
+
+            mean_opinion = mean_opinion / num_nodes
+            mean_opinion_over_time.append(mean_opinion)
+
 
             plt.draw()  # Redraw the current frame
             print('Step:', frame, end='\r')
+
             plt.pause(0.1)  # Adjust the pause for the simulation speed
 
         plt.ioff()  # Disable the interactive mode
+
+        # Plot the mean opinion over time when complete
+        plt.figure()
+        plt.plot(mean_opinion_over_time)  # plotting by columns
         plt.show()
 
 
@@ -711,7 +739,7 @@ def defuant_main(beta, threshold):
 
     population_size = 100
     population = initial_population(population_size)
-    parameters(population, population_size, beta, threshold, iterations=1000)
+    parameters(population, population_size, beta, threshold, iterations=10000)
     print(threshold, "is the threshold value,", beta, "is the beta value")
 
 
@@ -812,7 +840,7 @@ def main():
     if args.ising_model:
         if args.use_network:
             network = Network()
-            network.make_small_world_network_opinion(args.use_network, args.re_wire)  # Example parameters
+            network.make_small_world_network(args.use_network, args.re_wire)  # Example parameters
             network.simulate_ising(100, args.external, args.alpha)
         else:
             ising_main(create_ising_population(), args.alpha, args.external)
