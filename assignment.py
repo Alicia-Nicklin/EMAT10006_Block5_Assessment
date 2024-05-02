@@ -268,13 +268,14 @@ class Network:
                     line, = ax.plot([node_x, neighbour_x], [node_y, neighbour_y], color='black')
                     lines.append(line)
 
-        for _ in range(steps):
+        for frame in range(steps):
             self.update_opinions_ising(external, temperature)
             # Update the positions of circles and lines based on opinions
             for i, node in enumerate(self.nodes):
                 circles[i].set_color('purple' if node.opinion == 1 else 'pink')
 
             plt.draw()  # Redraw the current frame
+            print('Step:', frame, end='\r')
             plt.pause(0.1)  # Adjust the pause for the simulation speed
 
         plt.ioff()  # Disable the interactive mode
@@ -842,7 +843,7 @@ def main():
         network.plot()
     if args.ring_network:
         network = Network()
-        network.make_ring_network(args.ring_network, args.range)
+        network.make_ring_network(args.ring_network, 1)
         network.plot()
     if args.small_world:
         network = Network()
