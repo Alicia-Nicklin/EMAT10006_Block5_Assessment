@@ -71,9 +71,9 @@ class Network:
         Returns:
             A list of clustering coefficients for all nodes in the graph.
         '''
+
         # Build up a list of cluster counts, one for each node
         clustering = []
-
 
         for node in self.nodes:
 
@@ -231,8 +231,6 @@ class Network:
 
     def make_ring_network(self, N, neighbour_range=2):
 
-        # Your code  for task 4 goes
-
         self.make_default_network(N)
 
         for (index, node) in enumerate(self.nodes):
@@ -245,7 +243,6 @@ class Network:
 
     def make_small_world_network(self, N, re_wire_prob=0.2):
 
-        # Your code for task 4 goes here
         neighbour_range = 2
         self.nodes = []
 
@@ -590,7 +587,6 @@ def parameters(population, population_size, beta, threshold, iterations):
     plot_opinions(population_history)
 
 
-
 def initial_population(population_size):
     '''
     This function creates the numpy array of numbers from 0 to 1
@@ -604,7 +600,6 @@ def defuant_main(beta, threshold):
     This function gets each initial condition from the parser and runs the parameters function
     with the initial conditions
     '''
-
 
 
     population_size = 100
@@ -659,8 +654,10 @@ This section contains code for the main function- you should write some code for
 
 
 
-def arguments():
+def main():
+
     parser = argparse.ArgumentParser()
+    args = parser.parse_args()
 
     # Task 1 command line parameters
     parser.add_argument("-ising_model", action='store_true', help="Ising model with default parameters")
@@ -694,9 +691,6 @@ def arguments():
     parser.add_argument("-small_world", type=int, help="Create a small-worlds network with default parameters, size n")
     parser.add_argument("-re_wire", type=float, default=0.2, help="Re-wire probability. Defaults to 0.2")
 
-def main():
-    parser = argparse.ArgumentParser()
-    args = parser.parse_args()
 
     if len(sys.argv) == 1:
         parser.print_help(sys.stderr)
