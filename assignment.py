@@ -1,4 +1,4 @@
-####################################################################
+2####################################################################
 #                                                                  #
 #              EMAT10006 Further Computer Programming  2024        #
 #                                                                  #
@@ -674,7 +674,7 @@ def parameters(population, population_size, beta, threshold, iterations):
     It then calls both plot functions which display the graphs respectively
     '''
     population_history = []
-    for _ in range(iterations):
+    for frame in range(iterations):
         i_index = random.randint(0, population_size - 1)
         i_b, i, i_a, i_b_index, i_a_index = population_indexes(population, population_size, i_index)
 
@@ -688,7 +688,8 @@ def parameters(population, population_size, beta, threshold, iterations):
             population[i_index] = i_new
             population[i_b_index] = i_b_new
 
-        population_history.append(population.copy())
+        if frame % 100 == 0:
+            population_history.append(population.copy())
 
     plot_histogram(population)
     plot_opinions(population_history)
@@ -711,7 +712,7 @@ def defuant_main(beta, threshold):
 
     population_size = 100
     population = initial_population(population_size)
-    parameters(population, population_size, beta, threshold, iterations=1000)
+    parameters(population, population_size, beta, threshold, iterations=10000)
     print(threshold, "is the threshold value,", beta, "is the beta value")
 
 
