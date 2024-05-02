@@ -309,6 +309,15 @@ class Network:
         plt.plot(mean_opinion_over_time)  # plotting by columns
         plt.show()
 
+    def opinions_plotting(self,steps = 100):
+        opinions = []
+        for step in range(steps):
+            for node in self.nodes:
+                opinions.append(sum(node.opinions)/len(self.nodes))
+        plt.scatter(steps,opinions)
+        plt.show()
+
+
 
     def make_default_network(self, N):
         self.nodes = []
@@ -429,7 +438,7 @@ def test_networks():
     print("Testing ring network")
     assert (network.get_mean_degree() == 2), network.get_mean_degree()
     assert (network.get_mean_clustering() == 0), network.get_mean_clustering()
-    assert (network.get_mean_path_length() == 2.777777777777778), network.get_mean_path_length()
+    assert (network.get_mean_path_length() == 2.7777777777777777), network.get_mean_path_length()
 
     nodes = []
     num_nodes = 10
@@ -702,7 +711,7 @@ def parameters(population, population_size, beta, threshold, iterations):
     It then calls both plot functions which display the graphs respectively
     '''
     population_history = []
-    for _ in range(iterations):
+    for frame in range(iterations):
         i_index = random.randint(0, population_size - 1)
         i_b, i, i_a, i_b_index, i_a_index = population_indexes(population, population_size, i_index)
 
@@ -716,7 +725,8 @@ def parameters(population, population_size, beta, threshold, iterations):
             population[i_index] = i_new
             population[i_b_index] = i_b_new
 
-        population_history.append(population.copy())
+        if frame % 100 == 0:
+            population_history.append(population.copy())
 
     plot_histogram(population)
     plot_opinions(population_history)
@@ -827,6 +837,9 @@ def main():
     parser.add_argument("-small_world", type=int, help="Create a small-worlds network with default parameters, size n")
     parser.add_argument("-re_wire", type=float, default=0.2, help="Re-wire probability. Defaults to 0.2")
 
+
+    parser.add_argument("-plot_opinions")
+
     args = parser.parse_args()
 
     if len(sys.argv) == 1:
@@ -879,7 +892,9 @@ def main():
         network.plot()
 
     # Task 5
-
+    if args.plot_opinions:
+        network = Network()
+        network.opinions_plotting(args.plot_opinions)
 
 
 
