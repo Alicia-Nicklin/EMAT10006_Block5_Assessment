@@ -1,17 +1,21 @@
-
+Title: Assigment.py
+Group 18 
 Run this program in the Terminal. PyCharm doesn't display updating plots well.
 
+Requirements: 
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-
 import argparse
 import random
 import sys 
 
 link to our repository- https://github.com/Alicia-Nicklin/EMAT10006_Block5_Assessment.git
 
+Flags: 
+
 ```
+
 usage: assignment.py [-h] [-ising_model] [-external EXTERNAL] [-alpha ALPHA] [-test_ising] [-use_network USE_NETWORK] [-defuant] [-beta BETA] [-threshold THRESHOLD] [-test_defuant] [-network NETWORK] [-test_network] [-random_network RANDOM_NETWORK] [-connection_probability CONNECTION_PROBABILITY] [-ring_network RING_NETWORK] [-range RANGE] [-small_world SMALL_WORLD] [-re_wire RE_WIRE] [-plot_opinions PLOT_OPINIONS]
 
 options:
