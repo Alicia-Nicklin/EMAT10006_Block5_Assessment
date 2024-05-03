@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import argparse
 import random
-import sys 
 
 link to our repository- https://github.com/Alicia-Nicklin/EMAT10006_Block5_Assessment.git
 
