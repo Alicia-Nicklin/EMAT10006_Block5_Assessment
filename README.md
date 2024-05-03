@@ -30,5 +30,41 @@ options:
                         Small-worlds network default parameters, size n
   -re_wire RE_WIRE      Re-wire probability. Defaults to 0.2
   -plot_opinions PLOT_OPINIONS
+  
+Commands checked:
+
+python assignment.py -ising_model 
+python assignment.py -ising_model -external -0.1 
+python assignment.py -ising_model -alpha 10
+python assignment.py -test_ising
+
+python assignment.py -ising_model -external 0 -alpha 0.01    Picture looks a like too random compared to the one in the PDF
+python assignment.py -ising_model -external 0 -alpha 10
+python assignment.py -ising_model -external 0.1 -alpha 0.001
+python assignment.py -ising_model -external 0.1 -alpha 0.5
+
+python assignment.py -defuant 		We only get the graphs if we run the model 10,000 steps and plot each 100th
+python assignment.py -defuant -beta 0.1
+python assignment.py -defuant -threshold 0.3
+python assignment.py -test_defuant
+
+python assignment.py -defuant -beta 0.5 -threshold 0.5
+python assignment.py -defuant -beta 0.1 -threshold 0.5
+python assignment.py -defuant -beta 0.5 -threshold 0.1
+python assignment.py -defuant -beta 0.1 -threshold 0.2
+
+python assignment.py -test_network
+
+python assignment.py -random_network 20
+python assignment.py -ring_network 10
+python assignment.py -small_world 10
+python assignment.py -small_world 10 -re_wire 0.1
+
+python assignment.py -small_world 20 -re_wire 0.2
+python assignment.py -small_world 20 -re_wire 0.0
+python assignment.py -small_world 20 -re_wire 0.98    Doesn't look like it has enough connections compared to the picture in the spec
+
+python assignment.py -ising_model -use_network 10 		Produces an ugly animation
+python assignment.py -ising_model -use_network 500
 
 ```
