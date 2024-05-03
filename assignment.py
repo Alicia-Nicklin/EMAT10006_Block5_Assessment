@@ -17,7 +17,6 @@ import matplotlib.cm as cm
 
 import argparse
 import random
-import sys
 
 '''
 ==============================================================================================================
@@ -854,11 +853,6 @@ def main():
     parser.add_argument("-plot_opinions")
 
     args = parser.parse_args()
-
-    if len(sys.argv) == 1:
-        parser.print_help(sys.stderr)
-
-
 
     # Task 1 calls
     if args.test_ising:
