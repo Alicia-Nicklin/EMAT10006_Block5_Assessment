@@ -17,7 +17,6 @@ import matplotlib.cm as cm
 
 import argparse
 import random
-import sys
 
 '''
 ==============================================================================================================
@@ -857,11 +856,6 @@ def main():
 
 
     args = parser.parse_args()
-
-    if len(sys.argv) == 1:
-        parser.print_help(sys.stderr)
-
-
 
     # Task 1 calls
     if args.test_ising:
