@@ -1,8 +1,21 @@
-Guys - please work in your branch and let me know when you're done. I will then create pull requests for me to merge code into the master branch. Thanks.
-
+Title: Assigment.py
+Group 18 
 Run this program in the Terminal. PyCharm doesn't display updating plots well.
 
+Requirements: 
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+import argparse
+import random
+import sys 
+
+link to our repository- https://github.com/Alicia-Nicklin/EMAT10006_Block5_Assessment.git
+
+Flags: 
+
 ```
+
 usage: assignment.py [-h] [-ising_model] [-external EXTERNAL] [-alpha ALPHA] [-test_ising] [-use_network USE_NETWORK] [-defuant] [-beta BETA] [-threshold THRESHOLD] [-test_defuant] [-network NETWORK] [-test_network] [-random_network RANDOM_NETWORK] [-connection_probability CONNECTION_PROBABILITY] [-ring_network RING_NETWORK] [-range RANGE] [-small_world SMALL_WORLD] [-re_wire RE_WIRE] [-plot_opinions PLOT_OPINIONS]
 
 options:
@@ -38,7 +51,7 @@ python assignment.py -ising_model -external -0.1
 python assignment.py -ising_model -alpha 10
 python assignment.py -test_ising
 
-python assignment.py -ising_model -external 0 -alpha 0.01    Picture looks a like too random compared to the one in the PDF
+python assignment.py -ising_model -external 0 -alpha 0.01    
 python assignment.py -ising_model -external 0 -alpha 10
 python assignment.py -ising_model -external 0.1 -alpha 0.001
 python assignment.py -ising_model -external 0.1 -alpha 0.5
@@ -62,9 +75,11 @@ python assignment.py -small_world 10 -re_wire 0.1
 
 python assignment.py -small_world 20 -re_wire 0.2
 python assignment.py -small_world 20 -re_wire 0.0
-python assignment.py -small_world 20 -re_wire 0.98    Doesn't look like it has enough connections compared to the picture in the spec
+python assignment.py -small_world 20 -re_wire 0.98    
 
-python assignment.py -ising_model -use_network 10 		Produces an ugly animation
+
+
+python assignment.py -ising_model -use_network 10 	
 python assignment.py -ising_model -use_network 500
 
 ```
