@@ -319,7 +319,9 @@ class Network:
 
         # Plot the mean opinion over time when complete
         plt.figure()
-        plt.plot(mean_opinion_over_time)  # plotting by columns
+        plt.plot(mean_opinion_over_time)
+        plt.xlabel("Time steps")# plotting by columns
+        plt.ylabel("Mean Opinion")
         plt.show()
 
     def opinions_plotting(self,steps = 100):
