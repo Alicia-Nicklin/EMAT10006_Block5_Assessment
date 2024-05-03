@@ -277,7 +277,7 @@ class Network:
             node_x = network_radius * np.cos(node_angle)
             node_y = network_radius * np.sin(node_angle)
 
-            color = 'white' if node.opinion == 1 else 'black'
+            color = 'black' if node.opinion == 1 else 'pink'
             circle = plt.Circle((node_x, node_y), each_small_circle_radius, color=color, ec='none')
             ax.add_patch(circle)
             circles.append(circle)
@@ -304,7 +304,7 @@ class Network:
 
                 mean_opinion += node.opinion
 
-                circles[i].set_color('white' if node.opinion == 1 else 'black')
+                circles[i].set_color('black' if node.opinion == 1 else 'pink')
 
             mean_opinion = mean_opinion / num_nodes
             mean_opinion_over_time.append(mean_opinion)
@@ -437,6 +437,9 @@ class Network:
         plt.show()
 
 def test_networks():
+    '''
+    Runs the Test functions for task 4
+    '''
     # Ring network
     nodes = []
     num_nodes = 10
@@ -851,8 +854,6 @@ def main():
     parser.add_argument("-re_wire", type=float, default=0.2, help="Re-wire probability. Defaults to 0.2")
 
 
-    parser.add_argument("-plot_opinions")
-
     args = parser.parse_args()
 
     if len(sys.argv) == 1:
@@ -905,9 +906,7 @@ def main():
         network.plot()
 
     # Task 5
-    if args.plot_opinions:
-        network = Network()
-        network.opinions_plotting(args.plot_opinions)
+
 
 
 
