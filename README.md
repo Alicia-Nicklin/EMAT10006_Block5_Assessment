@@ -71,7 +71,7 @@ python assignment.py -small_world 10 -re_wire 0.1
 
 python assignment.py -small_world 20 -re_wire 0.2
 python assignment.py -small_world 20 -re_wire 0.0
-python assignment.py -small_world 20 -re_wire 0.98    Doesn't look like it has enough connections compared to the picture in the spec
+python assignment.py -small_world 20 -re_wire 0.98    
 
 
 
